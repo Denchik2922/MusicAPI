@@ -1,7 +1,9 @@
+using DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -32,6 +34,10 @@ namespace MusicAPI
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "MusicAPI", Version = "v1" });
 			});
+
+			services.AddDbContext<DBContext>(options =>
+			   options.UseSqlServer(Configuration.GetConnectionString("DB_CONN_STR")));
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

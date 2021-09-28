@@ -21,6 +21,10 @@ namespace MusicAPI
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
 					webBuilder.UseStartup<Startup>();
+				})
+				.ConfigureAppConfiguration((context, builder) =>
+				{
+					builder.AddJsonFile("dbsettings.json", false, false);
 				});
 	}
 }
