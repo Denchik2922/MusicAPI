@@ -21,9 +21,7 @@ namespace MusicAPI
 {
 	public class Startup
 	{
-
 		public Startup(IConfiguration configuration)
-
 		{
 			Configuration = configuration;
 		}
@@ -32,7 +30,6 @@ namespace MusicAPI
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
 			{
@@ -42,12 +39,11 @@ namespace MusicAPI
 				c.IncludeXmlComments(filePath);
 			});
 
-			services.AddDbContext<DBContext>(options =>
+			services.AddDbContext<MusicContext>(options =>
 			   options.UseSqlServer(Configuration.GetConnectionString("DB_CONN_STR")));
 
 			services.AddScoped<IMusicalService, MusicalService>();
 			services.AddScoped<IGroupService, GroupService>();
-
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

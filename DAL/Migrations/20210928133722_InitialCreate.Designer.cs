@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DAL.Migrations
 {
-    [DbContext(typeof(DBContext))]
+    [DbContext(typeof(MusicContext))]
     [Migration("20210928133722_InitialCreate")]
     partial class InitialCreate
     {

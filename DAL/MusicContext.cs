@@ -6,9 +6,9 @@ using Models;
 
 namespace DAL
 {
-	public sealed class DBContext : DbContext
+	public sealed class MusicContext : DbContext
 	{
-		public DBContext(DbContextOptions<DBContext> options): base(options) { }
+		public MusicContext(DbContextOptions<MusicContext> options): base(options) { }
 
 		public DbSet<Genre> Genres { get; set; }
 		public DbSet<Group> Groups { get; set; }

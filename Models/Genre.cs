@@ -5,16 +5,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
- 	public sealed class Genre
+ 	public class Genre
 	{
 		public int Id { get; set; }
-
-		[Required]
-		[MaxLength(50)]
 		public string Name { get; set; }
-
-		[Required]
-		[MaxLength(100)]
 		public string Description { get; set; }
 		public List<Musician> Musicians { get; set; } = new List<Musician>();
 		public List<Group> Groups { get; set; } = new List<Group>();

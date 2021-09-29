@@ -1,5 +1,0 @@
-{
-	"ConnectionStrings": {
-		"DB_CONN_STR": "Data Source=DESKTOP-8OHJ49P;Initial Catalog=DBMusic;Integrated Security=True;MultipleActiveResultSets=True"
-	}
-}

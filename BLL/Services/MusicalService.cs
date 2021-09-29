@@ -10,9 +10,9 @@ namespace BLL.Services
 {
 	public sealed class MusicalService : IMusicalService
 	{
-		private readonly DBContext _context;
+		private readonly MusicContext _context;
 
-		public MusicalService(DBContext context)
+		public MusicalService(MusicContext context)
 		{
 			_context = context;
 		}

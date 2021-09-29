@@ -14,16 +14,15 @@ namespace MusicAPI.Controllers
 	{
 		private readonly IMusicalService _db;
 
-
 		public MusicalController(IMusicalService db)
 		{
 			_db = db;
 		}
 
 		/// <summary>
-		/// Get all groups
+		/// Get all musicians
 		/// </summary>
-		/// <returns>List groups</returns>
+		/// <returns>List musicians</returns>
 		[HttpGet]
 		public IActionResult GetAllMusicians()
 		{

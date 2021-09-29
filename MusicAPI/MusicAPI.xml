@@ -8,7 +8,13 @@
             <summary>
             Get all groups
             </summary>
-            <returns>Groups</returns>
+            <returns>List groups</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicalController.GetAllMusicians">
+            <summary>
+            Get all musicians
+            </summary>
+            <returns>List musicians</returns>
         </member>
     </members>
 </doc>

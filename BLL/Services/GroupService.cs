@@ -8,9 +8,9 @@ namespace BLL.Services
 {
 	public sealed class GroupService : IGroupService
 	{
-		private readonly DBContext _context;
+		private readonly MusicContext _context;
 
-		public GroupService(DBContext context)
+		public GroupService(MusicContext context)
 		{
 			_context = context;
 		}
