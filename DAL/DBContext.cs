@@ -6,7 +6,7 @@ using Models;
 
 namespace DAL
 {
-	public class DBContext : DbContext
+	public sealed class DBContext : DbContext
 	{
 		public DBContext(DbContextOptions<DBContext> options): base(options) { }
 

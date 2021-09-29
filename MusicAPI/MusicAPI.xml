@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MusicAPI</name>
+    </assembly>
+    <members>
+        <member name="M:MusicAPI.Controllers.GroupController.GetAllGroups">
+            <summary>
+            Get all groups
+            </summary>
+            <returns>Groups</returns>
+        </member>
+    </members>
+</doc>

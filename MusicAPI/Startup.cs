@@ -1,3 +1,5 @@
+using BLL.Interfaces;
+using BLL.Services;
 using DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,14 +21,15 @@ namespace MusicAPI
 {
 	public class Startup
 	{
+
 		public Startup(IConfiguration configuration)
+
 		{
 			Configuration = configuration;
 		}
 
 		public IConfiguration Configuration { get; }
 
-		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
 
@@ -33,14 +37,19 @@ namespace MusicAPI
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "MusicAPI", Version = "v1" });
+
+				var filePath = Path.Combine(System.AppContext.BaseDirectory, "MusicApi.xml");
+				c.IncludeXmlComments(filePath);
 			});
 
 			services.AddDbContext<DBContext>(options =>
 			   options.UseSqlServer(Configuration.GetConnectionString("DB_CONN_STR")));
 
+			services.AddScoped<IMusicalService, MusicalService>();
+			services.AddScoped<IGroupService, GroupService>();
+
 		}
 
-		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
 			if (env.IsDevelopment())
