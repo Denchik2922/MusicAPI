@@ -16,5 +16,26 @@
             </summary>
             <returns>List musicians</returns>
         </member>
+        <member name="M:MusicAPI.Controllers.MusicalController.GetMusicanById(System.Int32)">
+            <summary>
+            Get musican by id
+            </summary>
+            <returns>Musican</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicalController.AddMusican(Models.Musician)">
+            <summary>
+            Add musican
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicalController.RemoveMusican(Models.Musician)">
+            <summary>
+            Remove musican
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicalController.UpdateMusican(Models.Musician)">
+            <summary>
+            Update musican
+            </summary>
+        </member>
     </members>
 </doc>

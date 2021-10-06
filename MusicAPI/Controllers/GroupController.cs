@@ -1,6 +1,7 @@
 ﻿using BLL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,11 @@ namespace MusicAPI.Controllers
 	[ApiController]
 	public class GroupController : ControllerBase
 	{
-		private readonly IGroupService _db;
+		private readonly IGenericService<Group> _groupService;
 
-		public GroupController(IGroupService db)
+		public GroupController(IGenericService<Group> groupService)
 		{
-			_db = db;
+			_groupService = groupService;
 		}
 
 		/// <summary>
@@ -26,7 +27,7 @@ namespace MusicAPI.Controllers
 		[HttpGet]
 		public IActionResult GetAllGroups()
 		{
-			return Ok(_db.GetAllGroup());
+			return Ok(_groupService.GetAll());
 		}
 
 	}

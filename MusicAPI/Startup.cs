@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace MusicAPI
 {
@@ -30,7 +31,9 @@ namespace MusicAPI
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllers();
+			services.AddControllers().AddNewtonsoftJson(options =>
+			options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "MusicAPI", Version = "v1" });
@@ -42,8 +45,9 @@ namespace MusicAPI
 			services.AddDbContext<MusicContext>(options =>
 			   options.UseSqlServer(Configuration.GetConnectionString("DB_CONN_STR")));
 
-			services.AddScoped<IMusicalService, MusicalService>();
-			services.AddScoped<IGroupService, GroupService>();
+			services.AddScoped(typeof(IGenericService<>), typeof(EfGenericService<>));
+
+			services.AddAutoMapper(typeof(Startup));
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -54,6 +58,7 @@ namespace MusicAPI
 				app.UseSwagger();
 				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MusicAPI v1"));
 			}
+
 
 			app.UseHttpsRedirection();
 
