@@ -4,11 +4,86 @@
         <name>MusicAPI</name>
     </assembly>
     <members>
+        <member name="M:MusicAPI.Controllers.GenreController.GetAllGenres">
+            <summary>
+            Get all genres
+            </summary>
+            <returns>List genres</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.GenreController.GetGenreById(System.Int32)">
+            <summary>
+            Get group by id
+            </summary>
+            <returns>Group</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.GenreController.AddGenre(Models.Genre)">
+            <summary>
+            Add genre
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.GenreController.RemoveGenre(Models.Genre)">
+            <summary>
+            Remove genre
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.GenreController.UpdateGenre(Models.Genre)">
+            <summary>
+            Update genre
+            </summary>
+        </member>
         <member name="M:MusicAPI.Controllers.GroupController.GetAllGroups">
             <summary>
             Get all groups
             </summary>
             <returns>List groups</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.GroupController.GetGroupById(System.Int32)">
+            <summary>
+            Get group by id
+            </summary>
+            <returns>Group</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.GroupController.AddGroup(Models.Group)">
+            <summary>
+            Add group
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.GroupController.RemoveGroup(Models.Group)">
+            <summary>
+            Remove group
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.GroupController.UpdateGroup(Models.Group)">
+            <summary>
+            Update group
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicAlbumController.GetAllMusicAlbum">
+            <summary>
+            Get all music album
+            </summary>
+            <returns>List music albums</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicAlbumController.GetMusicAlbumById(System.Int32)">
+            <summary>
+            Get music album by id
+            </summary>
+            <returns>Music Album</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicAlbumController.AddMusicAlbum(Models.MusicAlbum)">
+            <summary>
+            Add music album
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicAlbumController.RemoveMusicAlbum(Models.MusicAlbum)">
+            <summary>
+            Remove music album
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicAlbumController.UpdateMusicAlbum(Models.MusicAlbum)">
+            <summary>
+            Update music album
+            </summary>
         </member>
         <member name="M:MusicAPI.Controllers.MusicalController.GetAllMusicians">
             <summary>
@@ -35,6 +110,60 @@
         <member name="M:MusicAPI.Controllers.MusicalController.UpdateMusican(Models.Musician)">
             <summary>
             Update musican
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicInstrumentController.GetAllInstruments">
+            <summary>
+            Get all instruments
+            </summary>
+            <returns>List instruments</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicInstrumentController.GetInstrumentById(System.Int32)">
+            <summary>
+            Get instrument by id
+            </summary>
+            <returns>Instrument</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicInstrumentController.AddInstrument(Models.MusicInstrument)">
+            <summary>
+            Add instrument
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicInstrumentController.RemoveInstrument(Models.MusicInstrument)">
+            <summary>
+            Remove instrument
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.MusicInstrumentController.UpdateSong(Models.MusicInstrument)">
+            <summary>
+            Update instrument
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.SongController.GetAllSongs">
+            <summary>
+            Get all songs
+            </summary>
+            <returns>List songs</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.SongController.GetSongById(System.Int32)">
+            <summary>
+            Get song by id
+            </summary>
+            <returns>Song</returns>
+        </member>
+        <member name="M:MusicAPI.Controllers.SongController.AddSong(Models.Song)">
+            <summary>
+            Add song
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.SongController.RemoveSong(Models.Song)">
+            <summary>
+            Remove song
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.SongController.UpdateSong(Models.Song)">
+            <summary>
+            Update song
             </summary>
         </member>
     </members>

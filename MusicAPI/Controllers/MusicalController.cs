@@ -33,11 +33,7 @@ namespace MusicAPI.Controllers
 		[HttpGet]
 		public IActionResult GetAllMusicians()
 		{
-			/*var musicians = _mapper.Map<List<MusicianDTO>>(_musicService.GetAll());*/
-
-			var musicians = _musicService.GetWithInclude(m => m.Group);
-			
-			return Ok(musicians);
+			return Ok(_musicService.GetAll());
 		}
 
 		/// <summary>
@@ -47,7 +43,11 @@ namespace MusicAPI.Controllers
 		[HttpGet("{id}")]
 		public IActionResult GetMusicanById(int id)
 		{
-			return Ok(_musicService.GetById(id));
+			var musician = _musicService.GetWithInclude(x => x.Id == id, m => m.Group,
+														m => m.MusicInstruments,
+														m => m.Genres);
+			List<MusicianDTO> musicianDto = _mapper.Map<List<MusicianDTO>>(musician);
+			return Ok(musicianDto);
 		}
 
 
