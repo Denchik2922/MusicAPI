@@ -3,7 +3,7 @@ using BLL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using Models.ModelsDTO;
+using MusicAPI.ModelsDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +15,10 @@ namespace MusicAPI.Controllers
 	[ApiController]
 	public class GroupController : ControllerBase
 	{
-		private readonly IGenericService<Group> _groupService;
+		private readonly IGroupService _groupService;
 		private readonly IMapper _mapper;
 
-		public GroupController(IGenericService<Group> groupService, IMapper mapper)
+		public GroupController(IGroupService groupService, IMapper mapper)
 		{
 			_groupService = groupService;
 			_mapper = mapper;
@@ -41,41 +41,86 @@ namespace MusicAPI.Controllers
 		[HttpGet("{id}")]
 		public IActionResult GetGroupById(int id)
 		{
-			var group = _groupService.GetWithInclude(x => x.Id == id, g => g.Genres,
-														g => g.Members);
-			List<GroupDTO> groupDto = _mapper.Map<List<GroupDTO>>(group);
+			var group = _groupService.GetByIdWithInclude(id);
+			GroupDTO groupDto = _mapper.Map<GroupDTO>(group);
 			return Ok(groupDto);
 		}
-
 
 		/// <summary>
 		/// Add group
 		/// </summary>
 		[HttpPost]
-		public IActionResult AddGroup(Group group)
+		public IActionResult AddGroup(GroupDTO groupDto)
 		{
+			Group group = _mapper.Map<Group>(groupDto);
 			_groupService.Add(group);
 			return Ok("Group added");
+		}
+
+		/// <summary>
+		/// Add member to group
+		/// </summary>
+		[HttpPost]
+		[Route("[action]")]
+		public IActionResult AddMemberToGroup(int groupId, MusicianDTO musicianDto)
+		{
+			Musician musician = _mapper.Map<Musician>(musicianDto);
+			_groupService.AddMemberToGroup(groupId, musician);
+			return Ok("Member added");
+		}
+
+		/// <summary>
+		/// Add genre to group
+		/// </summary>
+		[HttpPost]
+		[Route("[action]")]
+		public IActionResult AddGenreToGroup(int groupId, GenreDTO genreDTO)
+		{
+			Genre genre = _mapper.Map<Genre>(genreDTO);
+			_groupService.AddGenreToGroup(groupId, genre);
+			return Ok("Genre added");
 		}
 
 		/// <summary>
 		/// Remove group
 		/// </summary>
 		[HttpDelete]
-		public IActionResult RemoveGroup(Group group)
+		public IActionResult RemoveGroup(int id)
 		{
 
-			_groupService.Remove(group);
+			_groupService.RemoveById(id);
 			return Ok("Group removed");
+		}
+
+		/// <summary>
+		/// Remove member
+		/// </summary>
+		[HttpDelete]
+		[Route("[action]")]
+		public IActionResult RemoveMember(int groupId, int memberId)
+		{
+			_groupService.RemoveMemberToGroup(groupId, memberId);
+			return Ok("Member removed");
+		}
+
+		/// <summary>
+		/// Remove genre
+		/// </summary>
+		[HttpDelete]
+		[Route("[action]")]
+		public IActionResult RemoveGenre(int groupId, int genreId)
+		{
+			_groupService.RemoveGenreToGroup(groupId, genreId);
+			return Ok("Genre removed");
 		}
 
 		/// <summary>
 		/// Update group
 		/// </summary>
 		[HttpPut]
-		public IActionResult UpdateGroup(Group group)
+		public IActionResult UpdateGroup(GroupDTO groupDto)
 		{
-
+			Group group = _mapper.Map<Group>(groupDto);
 			_groupService.Update(group);
 			return Ok("Group updated");
 		}

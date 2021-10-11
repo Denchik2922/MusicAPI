@@ -5,15 +5,12 @@ using System.Text;
 
 namespace BLL.Interfaces
 {
-	public interface IGenericService<TEntity> where TEntity : class
-	{
+    public interface IGenericService<TEntity> where TEntity : class
+    {
         void Add(TEntity entity);
         TEntity GetById(int id);
         IEnumerable<TEntity> GetAll();
-        void Remove(TEntity entity);
+        void RemoveById(int id);
         void Update(TEntity entity);
-        IEnumerable<TEntity> GetWithInclude(params Expression<Func<TEntity, object>>[] includeProperties);
-        IEnumerable<TEntity> GetWithInclude(Func<TEntity, bool> predicate,
-            params Expression<Func<TEntity, object>>[] includeProperties);
     }
 }

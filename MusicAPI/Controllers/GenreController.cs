@@ -2,7 +2,7 @@
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using Models.ModelsDTO;
+using MusicAPI.ModelsDTO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -48,8 +48,9 @@ namespace MusicAPI.Controllers
 		/// Add genre
 		/// </summary>
 		[HttpPost]
-		public IActionResult AddGenre(Genre genre)
+		public IActionResult AddGenre(GenreDTO genreDto)
 		{
+			Genre genre = _mapper.Map<Genre>(genreDto);
 			_genreService.Add(genre);
 			return Ok("Genre added");
 		}
@@ -58,10 +59,9 @@ namespace MusicAPI.Controllers
 		/// Remove genre
 		/// </summary>
 		[HttpDelete]
-		public IActionResult RemoveGenre(Genre genre)
+		public IActionResult RemoveGenre(int id)
 		{
-
-			_genreService.Remove(genre);
+			_genreService.RemoveById(id);
 			return Ok("Genre removed");
 		}
 
@@ -69,9 +69,9 @@ namespace MusicAPI.Controllers
 		/// Update genre
 		/// </summary>
 		[HttpPut]
-		public IActionResult UpdateGenre(Genre genre)
+		public IActionResult UpdateGenre(GenreDTO genreDto)
 		{
-
+			Genre genre = _mapper.Map<Genre>(genreDto);
 			_genreService.Update(genre);
 			return Ok("Genre updated");
 		}

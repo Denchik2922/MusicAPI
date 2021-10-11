@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace Models.ModelsDTO
+namespace MusicAPI.ModelsDTO
 {
 	public class MusicianDTO
 	{
@@ -14,7 +14,6 @@ namespace Models.ModelsDTO
 		public List<MusicInstrumentDTO> MusicInstruments { get; set; }
 		public List<GenreDTO> Genres { get; set; }
 		public int GroupId { get; set; }
-		public GroupDTO Group { get; set; }
 
 	}
 }

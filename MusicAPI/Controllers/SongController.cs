@@ -2,7 +2,7 @@
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using Models.ModelsDTO;
+using MusicAPI.ModelsDTO;
 using System.Collections.Generic;
 
 namespace MusicAPI.Controllers
@@ -11,10 +11,10 @@ namespace MusicAPI.Controllers
 	[ApiController]
 	public class SongController : ControllerBase
 	{
-		private readonly IGenericService<Song> _songService;
+		private readonly ISongService _songService;
 		private readonly IMapper _mapper;
 
-		public SongController(IGenericService<Song> songService, IMapper mapper)
+		public SongController(ISongService songService, IMapper mapper)
 		{
 			_songService = songService;
 			_mapper = mapper;
@@ -37,9 +37,8 @@ namespace MusicAPI.Controllers
 		[HttpGet("{id}")]
 		public IActionResult GetSongById(int id)
 		{
-			var song = _songService.GetWithInclude(x => x.Id == id, s => s.Genres,
-														s => s.MusicAlbum);
-			List<SongDTO> songDto = _mapper.Map<List<SongDTO>>(song);
+			var song = _songService.GetByIdWithInclude(id);
+			SongDTO songDto = _mapper.Map<SongDTO>(song);
 			return Ok(songDto);
 		}
 
@@ -48,8 +47,9 @@ namespace MusicAPI.Controllers
 		/// Add song
 		/// </summary>
 		[HttpPost]
-		public IActionResult AddSong(Song song)
+		public IActionResult AddSong(SongDTO songDto)
 		{
+			Song song = _mapper.Map<Song>(songDto);
 			_songService.Add(song);
 			return Ok("Song added");
 		}
@@ -58,10 +58,9 @@ namespace MusicAPI.Controllers
 		/// Remove song
 		/// </summary>
 		[HttpDelete]
-		public IActionResult RemoveSong(Song song)
+		public IActionResult RemoveSong(int id)
 		{
-
-			_songService.Remove(song);
+			_songService.RemoveById(id);
 			return Ok("Song removed");
 		}
 
@@ -69,9 +68,9 @@ namespace MusicAPI.Controllers
 		/// Update song
 		/// </summary>
 		[HttpPut]
-		public IActionResult UpdateSong(Song song)
+		public IActionResult UpdateSong(SongDTO songDto)
 		{
-
+			Song song = _mapper.Map<Song>(songDto);
 			_songService.Update(song);
 			return Ok("Song updated");
 		}

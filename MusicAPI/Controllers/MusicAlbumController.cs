@@ -2,7 +2,7 @@
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using Models.ModelsDTO;
+using MusicAPI.ModelsDTO;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -12,10 +12,10 @@ namespace MusicAPI.Controllers
 	[ApiController]
 	public class MusicAlbumController : ControllerBase
 	{
-		private readonly IGenericService<MusicAlbum> _albumService;
+		private readonly IMusicAlbumService _albumService;
 		private readonly IMapper _mapper;
 
-		public MusicAlbumController(IGenericService<MusicAlbum> albumService, IMapper mapper)
+		public MusicAlbumController(IMusicAlbumService albumService, IMapper mapper)
 		{
 			_albumService = albumService;
 			_mapper = mapper;
@@ -38,41 +38,85 @@ namespace MusicAPI.Controllers
 		[HttpGet("{id}")]
 		public IActionResult GetMusicAlbumById(int id)
 		{
-			var musicAlbum = _albumService.GetWithInclude(x => x.Id == id, a => a.Genres,
-														a => a.Songs);
-			List<MusicAlbumDTO> musicAlbumDto = _mapper.Map<List<MusicAlbumDTO>>(musicAlbum);
-			return Ok(musicAlbum);
+			var musicAlbum = _albumService.GetByIdWithInclude(id);
+			MusicAlbumDTO musicAlbumDto = _mapper.Map<MusicAlbumDTO>(musicAlbum);
+			return Ok(musicAlbumDto);
 		}
-
 
 		/// <summary>
 		/// Add music album
 		/// </summary>
 		[HttpPost]
-		public IActionResult AddMusicAlbum(MusicAlbum musicAlbum)
+		public IActionResult AddMusicAlbum(MusicAlbumDTO musicAlbumDto)
 		{
+			MusicAlbum musicAlbum = _mapper.Map<MusicAlbum>(musicAlbumDto);
 			_albumService.Add(musicAlbum);
 			return Ok("Music album added");
 		}
 
 		/// <summary>
-		/// Remove music album
+		/// Add song to album
+		/// </summary>
+		[HttpPost]
+		[Route("[action]")]
+		public IActionResult AddSong(int albumId, SongDTO songDto)
+		{
+			Song song = _mapper.Map<Song>(songDto);
+			_albumService.AddSongToAlbum(albumId, song);
+			return Ok("Song added");
+		}
+
+		/// <summary>
+		/// Add genre to album
+		/// </summary>
+		[HttpPost]
+		[Route("[action]")]
+		public IActionResult AddGenre(int albumId, GenreDTO genreDTO)
+		{
+			Genre genre = _mapper.Map<Genre>(genreDTO);
+			_albumService.AddGenreToAlbum(albumId, genre);
+			return Ok("Genre added");
+		}
+
+		/// <summary>
+		/// Remove music album by id
 		/// </summary>
 		[HttpDelete]
-		public IActionResult RemoveMusicAlbum(MusicAlbum musicAlbum)
+		public IActionResult RemoveMusicAlbum(int id)
 		{
-
-			_albumService.Remove(musicAlbum);
+			_albumService.RemoveById(id);
 			return Ok("Music album removed");
+		}
+
+		/// <summary>
+		/// Remove song
+		/// </summary>
+		[HttpDelete]
+		[Route("[action]")]
+		public IActionResult RemoveSong(int albumId, int songId)
+		{
+			_albumService.RemoveSongToAlbum(albumId, songId);
+			return Ok("Song removed");
+		}
+
+		/// <summary>
+		/// Remove genre
+		/// </summary>
+		[HttpDelete]
+		[Route("[action]")]
+		public IActionResult RemoveGenre(int albumId, int genreId)
+		{
+			_albumService.RemoveGenreToAlbum(albumId, genreId);
+			return Ok("Genre removed");
 		}
 
 		/// <summary>
 		/// Update music album
 		/// </summary>
 		[HttpPut]
-		public IActionResult UpdateMusicAlbum(MusicAlbum musicAlbum)
+		public IActionResult UpdateMusicAlbum(MusicAlbumDTO musicAlbumDto)
 		{
-
+			MusicAlbum musicAlbum = _mapper.Map<MusicAlbum>(musicAlbumDto);
 			_albumService.Update(musicAlbum);
 			return Ok("Music album updated");
 		}

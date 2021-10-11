@@ -2,7 +2,7 @@
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using Models.ModelsDTO;
+using MusicAPI.ModelsDTO;
 using System.Collections.Generic;
 
 namespace MusicAPI.Controllers
@@ -47,8 +47,9 @@ namespace MusicAPI.Controllers
 		/// Add instrument
 		/// </summary>
 		[HttpPost]
-		public IActionResult AddInstrument(MusicInstrument instrument)
+		public IActionResult AddInstrument(MusicInstrumentDTO instrumentDto)
 		{
+			MusicInstrument instrument = _mapper.Map<MusicInstrument>(instrumentDto);
 			_instrumentService.Add(instrument);
 			return Ok("Instrument added");
 		}
@@ -57,10 +58,10 @@ namespace MusicAPI.Controllers
 		/// Remove instrument
 		/// </summary>
 		[HttpDelete]
-		public IActionResult RemoveInstrument(MusicInstrument instrument)
+		public IActionResult RemoveInstrument(int id)
 		{
 
-			_instrumentService.Remove(instrument);
+			_instrumentService.RemoveById(id);
 			return Ok("Instrument removed");
 		}
 
@@ -68,9 +69,9 @@ namespace MusicAPI.Controllers
 		/// Update instrument
 		/// </summary>
 		[HttpPut]
-		public IActionResult UpdateSong(MusicInstrument instrument)
+		public IActionResult UpdateSong(MusicInstrumentDTO instrumentDto)
 		{
-
+			MusicInstrument instrument = _mapper.Map<MusicInstrument>(instrumentDto);
 			_instrumentService.Update(instrument);
 			return Ok("Instrument updated");
 		}

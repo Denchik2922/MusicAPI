@@ -3,7 +3,7 @@ using BLL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models.ModelsDTO;
+using MusicAPI.ModelsDTO;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -17,13 +17,13 @@ namespace MusicAPI.Controllers
 	[ApiController]
 	public class MusicalController : ControllerBase
 	{
-		private readonly IGenericService<Musician> _musicService;
+		private readonly IMusicianService _musicianService;
 		private readonly IMapper _mapper;
 
-		public MusicalController(IGenericService<Musician> musicService, IMapper mapper)
+		public MusicalController(IMapper mapper, IMusicianService musicianService)
 		{
-			_musicService = musicService;
 			_mapper = mapper;
+			_musicianService = musicianService;
 		}
 
 		/// <summary>
@@ -33,53 +33,101 @@ namespace MusicAPI.Controllers
 		[HttpGet]
 		public IActionResult GetAllMusicians()
 		{
-			return Ok(_musicService.GetAll());
+			return Ok(_musicianService.GetAll());
 		}
 
 		/// <summary>
-		/// Get musican by id
+		/// Get musician by id
 		/// </summary>
-		/// <returns>Musican</returns>
+		/// <returns>Musician</returns>
 		[HttpGet("{id}")]
-		public IActionResult GetMusicanById(int id)
+		public IActionResult GetMusicianById(int id)
 		{
-			var musician = _musicService.GetWithInclude(x => x.Id == id, m => m.Group,
-														m => m.MusicInstruments,
-														m => m.Genres);
-			List<MusicianDTO> musicianDto = _mapper.Map<List<MusicianDTO>>(musician);
+			
+			var musician = _musicianService.GetByIdWithInclude(id);
+			MusicianDTO musicianDto = _mapper.Map<MusicianDTO>(musician);
 			return Ok(musicianDto);
 		}
 
 
 		/// <summary>
-		/// Add musican
+		/// Add musician
 		/// </summary>
 		[HttpPost]
-		public IActionResult AddMusican(Musician musician)
+		public IActionResult AddMusican(MusicianDTO musicianDto)
 		{
-			_musicService.Add(musician);
+			Musician musician = _mapper.Map<Musician>(musicianDto);
+			_musicianService.Add(musician);
 			return Ok("Musican added");
 		}
 
 		/// <summary>
-		/// Remove musican
+		/// Add music instrument to musician
 		/// </summary>
-		[HttpDelete]
-		public IActionResult RemoveMusican(Musician musician)
+		[HttpPost]
+		[Route("[action]")]
+		public IActionResult AddMusicInstrument(int id, MusicInstrumentDTO instrumentDTO)
 		{
 
-			_musicService.Remove(musician);
+			MusicInstrument instrument = _mapper.Map<MusicInstrument>(instrumentDTO);
+			_musicianService.AddInstrumentToMusician(id, instrument);
+
+			return Ok("Music instrument added");
+		}
+
+		/// <summary>
+		/// Add genre to musician
+		/// </summary>
+		[HttpPost]
+		[Route("[action]")]
+		public IActionResult AddGenre(int id, GenreDTO genreDTO)
+		{
+			Genre genre = _mapper.Map<Genre>(genreDTO);
+			_musicianService.AddGenreToMusician(id, genre);
+
+			return Ok("Genre added");
+		}
+
+		/// <summary>
+		/// Remove musician by id
+		/// </summary>
+		[HttpDelete]
+		public IActionResult RemoveMusician(int id)
+		{
+			_musicianService.RemoveById(id);
 			return Ok("Musican removed");
 		}
 
 		/// <summary>
-		/// Update musican
+		/// Remove music instrument
+		/// </summary>
+		[HttpDelete]
+		[Route("[action]")]
+		public IActionResult RemoveMusicInstrument(int musicianId, int instrumentId)
+		{
+			_musicianService.RemoveInstrumentToMusician(musicianId, instrumentId);
+			return Ok("Music instrument removed");
+		}
+
+		/// <summary>
+		/// Remove genre
+		/// </summary>
+		[HttpDelete]
+		[Route("[action]")]
+		public IActionResult RemoveGenre(int musicianId, int genreId)
+		{
+			_musicianService.RemoveGenreToMusician(musicianId, genreId);
+			return Ok("Genre removed");
+		}
+
+		/// <summary>
+		/// Update musician
 		/// </summary>
 		[HttpPut]
-		public IActionResult UpdateMusican(Musician musician)
+		public IActionResult UpdateMusician(MusicianDTO musicianDto)
 		{
-
-			_musicService.Update(musician);
+			Musician musician = _mapper.Map<Musician>(musicianDto);
+			_musicianService.Update(musician);
 			return Ok("Musican updated");
 		}
 

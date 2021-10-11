@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using MusicAPI.Infrastructure;
 
 namespace MusicAPI
 {
@@ -42,11 +43,18 @@ namespace MusicAPI
 				c.IncludeXmlComments(filePath);
 			});
 
+			//Add DbContext
 			services.AddDbContext<MusicContext>(options =>
 			   options.UseSqlServer(Configuration.GetConnectionString("DB_CONN_STR")));
 
-			services.AddScoped(typeof(IGenericService<>), typeof(EfGenericService<>));
+			//Add Services
+			services.AddScoped(typeof(IGenericService<>), typeof(BaseGenericService<>));
+			services.AddScoped<IMusicianService, MusicianService>();
+			services.AddScoped<IGroupService, GroupService>();
+			services.AddScoped<ISongService, SongService>();
+			services.AddScoped<IMusicAlbumService, MusicAlbumService>();
 
+			//Add AutoMapper
 			services.AddAutoMapper(typeof(Startup));
 		}
 
