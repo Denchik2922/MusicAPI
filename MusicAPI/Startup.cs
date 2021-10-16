@@ -3,21 +3,14 @@ using BLL.Services;
 using DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
 using MusicAPI.Infrastructure;
+using System;
 
 namespace MusicAPI
 {
@@ -43,6 +36,9 @@ namespace MusicAPI
 				c.IncludeXmlComments(filePath);
 			});
 
+			//Add HttpClient
+			services.AddHttpClient<IConcertApiRepository, ConcertApiRepository>();
+
 			//Add DbContext
 			services.AddDbContext<MusicContext>(options =>
 			   options.UseSqlServer(Configuration.GetConnectionString("DB_CONN_STR")));
@@ -53,6 +49,8 @@ namespace MusicAPI
 			services.AddScoped<IGroupService, GroupService>();
 			services.AddScoped<ISongService, SongService>();
 			services.AddScoped<IMusicAlbumService, MusicAlbumService>();
+			services.AddScoped<IConcertService, ConcertService>();
+			services.AddSingleton<IConcertApiRepository, ConcertApiRepository>();
 
 			//Add AutoMapper
 			services.AddAutoMapper(typeof(Startup));

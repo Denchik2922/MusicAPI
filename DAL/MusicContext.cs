@@ -16,6 +16,9 @@ namespace DAL
 		public DbSet<Musician> Musicians { get; set; }
 		public DbSet<MusicInstrument> MusicInstruments { get; set; }
 		public DbSet<Song> Songs { get; set; }
+		public DbSet<Concert> Concerts { get; set; }
+		public DbSet<Stat> Stats { get; set; }
+		public DbSet<Venue> Venues { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

@@ -23,6 +23,12 @@ namespace MusicAPI.infrastructure
 			CreateMap<MusicInstrument, MusicInstrumentDTO>().ReverseMap();
 
 			CreateMap<Song, SongDTO>().ReverseMap();
+
+			CreateMap<Concert, ConcertDTO>().ReverseMap();
+
+			CreateMap<Stat, StatDTO>().ReverseMap();
+
+			CreateMap<Venue, VenueDTO>().ReverseMap();
 		}
 	}
 }

@@ -20,7 +20,7 @@ namespace BLL.Services
 			_dbSet = context.Set<TEntity>();
 		}
 
-		public void Add(TEntity entity)
+		public virtual void Add(TEntity entity)
 		{
 			_dbSet.Add(entity);
 			_context.SaveChanges();
