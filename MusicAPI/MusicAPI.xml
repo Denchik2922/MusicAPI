@@ -226,6 +226,21 @@
             Update song
             </summary>
         </member>
+        <member name="M:MusicAPI.Controllers.StatisticController.GetPopularInstruments">
+            <summary>
+            Get five popular instruments
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.StatisticController.GetAverageCost(System.Int32)">
+            <summary>
+            Get the average cost of a concert per month
+            </summary>
+        </member>
+        <member name="M:MusicAPI.Controllers.StatisticController.GetCountryWithMostMusicians">
+            <summary>
+            Get the average cost of a concert per month
+            </summary>
+        </member>
         <member name="F:MusicAPI.Infrastructure.TimeSpanConverter.TimeSpanFormatString">
             <summary>
             Format: Days.Hours:Minutes:Seconds:Milliseconds

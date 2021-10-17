@@ -50,6 +50,7 @@ namespace MusicAPI
 			services.AddScoped<ISongService, SongService>();
 			services.AddScoped<IMusicAlbumService, MusicAlbumService>();
 			services.AddScoped<IConcertService, ConcertService>();
+			services.AddScoped<IStatisticService, StatisticService>();
 			services.AddSingleton<IConcertApiRepository, ConcertApiRepository>();
 
 			//Add AutoMapper
