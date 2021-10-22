@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MusicAPI.ModelsDTO
+namespace MusicAPI.ModelsDto
 {
-	public class ConcertDTO
+	public class ConcertDto
 	{
 		public int Id { get; set; }
 		public string Title { get; set; }
 		public string Url { get; set; }
-		public StatDTO Stats { get; set; }
+		public StatDto Stats { get; set; }
 		public double Popularity { get; set; }
 		public DateTime Datetime_Local { get; set; }
-		public VenueDTO Venue { get; set; }
+		public VenueDto Venue { get; set; }
 	}
 }

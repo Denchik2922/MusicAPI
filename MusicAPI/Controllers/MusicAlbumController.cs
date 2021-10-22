@@ -2,7 +2,7 @@
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using MusicAPI.ModelsDTO;
+using MusicAPI.ModelsDto;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -39,7 +39,7 @@ namespace MusicAPI.Controllers
 		public IActionResult GetMusicAlbumById(int id)
 		{
 			var musicAlbum = _albumService.GetByIdWithInclude(id);
-			MusicAlbumDTO musicAlbumDto = _mapper.Map<MusicAlbumDTO>(musicAlbum);
+			MusicAlbumDto musicAlbumDto = _mapper.Map<MusicAlbumDto>(musicAlbum);
 			return Ok(musicAlbumDto);
 		}
 
@@ -47,7 +47,7 @@ namespace MusicAPI.Controllers
 		/// Add music album
 		/// </summary>
 		[HttpPost]
-		public IActionResult AddMusicAlbum(MusicAlbumDTO musicAlbumDto)
+		public IActionResult AddMusicAlbum(MusicAlbumDto musicAlbumDto)
 		{
 			MusicAlbum musicAlbum = _mapper.Map<MusicAlbum>(musicAlbumDto);
 			_albumService.Add(musicAlbum);
@@ -59,7 +59,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
-		public IActionResult AddSong(int albumId, SongDTO songDto)
+		public IActionResult AddSong(int albumId, SongDto songDto)
 		{
 			Song song = _mapper.Map<Song>(songDto);
 			_albumService.AddSongToAlbum(albumId, song);
@@ -71,7 +71,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
-		public IActionResult AddGenre(int albumId, GenreDTO genreDTO)
+		public IActionResult AddGenre(int albumId, GenreDto genreDTO)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDTO);
 			_albumService.AddGenreToAlbum(albumId, genre);
@@ -114,7 +114,7 @@ namespace MusicAPI.Controllers
 		/// Update music album
 		/// </summary>
 		[HttpPut]
-		public IActionResult UpdateMusicAlbum(MusicAlbumDTO musicAlbumDto)
+		public IActionResult UpdateMusicAlbum(MusicAlbumDto musicAlbumDto)
 		{
 			MusicAlbum musicAlbum = _mapper.Map<MusicAlbum>(musicAlbumDto);
 			_albumService.Update(musicAlbum);

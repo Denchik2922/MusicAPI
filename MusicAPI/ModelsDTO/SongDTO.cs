@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MusicAPI.ModelsDTO
+namespace MusicAPI.ModelsDto
 {
-	public class SongDTO
+	public class SongDto
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
@@ -15,6 +15,6 @@ namespace MusicAPI.ModelsDTO
 		[JsonConverter(typeof(TimeSpanConverter))]
 		public TimeSpan Length { get; set; }
 		public int MusicAlbumId { get; set; }
-		public List<GenreDTO> Genres { get; set; }
+		public List<GenreDto> Genres { get; set; }
 	}
 }

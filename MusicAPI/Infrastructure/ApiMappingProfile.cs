@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Models;
-using MusicAPI.ModelsDTO;
+using MusicAPI.ModelsDto;
 
 namespace MusicAPI.infrastructure
 {
@@ -12,23 +12,23 @@ namespace MusicAPI.infrastructure
 	{
 		public ApiMappingProfile()
 		{
-			CreateMap<Musician, MusicianDTO>().ReverseMap();
+			CreateMap<Musician, MusicianDto>().ReverseMap();
 
-			CreateMap<Genre, GenreDTO>().ReverseMap();
+			CreateMap<Genre, GenreDto>().ReverseMap();
 
-			CreateMap<Group, GroupDTO>().ReverseMap();
+			CreateMap<Group, GroupDto>().ReverseMap();
 
-			CreateMap<MusicAlbum, MusicAlbumDTO>().ReverseMap();
+			CreateMap<MusicAlbum, MusicAlbumDto>().ReverseMap();
 
-			CreateMap<MusicInstrument, MusicInstrumentDTO>().ReverseMap();
+			CreateMap<MusicInstrument, MusicInstrumentDto>().ReverseMap();
 
-			CreateMap<Song, SongDTO>().ReverseMap();
+			CreateMap<Song, SongDto>().ReverseMap();
 
-			CreateMap<Concert, ConcertDTO>().ReverseMap();
+			CreateMap<Concert, ConcertDto>().ReverseMap();
 
-			CreateMap<Stat, StatDTO>().ReverseMap();
+			CreateMap<Stat, StatDto>().ReverseMap();
 
-			CreateMap<Venue, VenueDTO>().ReverseMap();
+			CreateMap<Venue, VenueDto>().ReverseMap();
 		}
 	}
 }

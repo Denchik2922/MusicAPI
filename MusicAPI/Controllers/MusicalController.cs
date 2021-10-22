@@ -3,13 +3,14 @@ using BLL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MusicAPI.ModelsDTO;
+using MusicAPI.ModelsDto;
 using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http.Description;
+using System.Net;
 
 namespace MusicAPI.Controllers
 {
@@ -43,10 +44,10 @@ namespace MusicAPI.Controllers
 		[HttpGet("{id}")]
 		public IActionResult GetMusicianById(int id)
 		{
-			
 			var musician = _musicianService.GetByIdWithInclude(id);
-			MusicianDTO musicianDto = _mapper.Map<MusicianDTO>(musician);
+			MusicianDto musicianDto = _mapper.Map<MusicianDto>(musician);
 			return Ok(musicianDto);
+			
 		}
 
 
@@ -54,7 +55,7 @@ namespace MusicAPI.Controllers
 		/// Add musician
 		/// </summary>
 		[HttpPost]
-		public IActionResult AddMusican(MusicianDTO musicianDto)
+		public IActionResult AddMusican(MusicianDto musicianDto)
 		{
 			Musician musician = _mapper.Map<Musician>(musicianDto);
 			_musicianService.Add(musician);
@@ -66,7 +67,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
-		public IActionResult AddMusicInstrument(int id, MusicInstrumentDTO instrumentDTO)
+		public IActionResult AddMusicInstrument(int id, MusicInstrumentDto instrumentDTO)
 		{
 
 			MusicInstrument instrument = _mapper.Map<MusicInstrument>(instrumentDTO);
@@ -80,7 +81,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
-		public IActionResult AddGenre(int id, GenreDTO genreDTO)
+		public IActionResult AddGenre(int id, GenreDto genreDTO)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDTO);
 			_musicianService.AddGenreToMusician(id, genre);
@@ -124,7 +125,7 @@ namespace MusicAPI.Controllers
 		/// Update musician
 		/// </summary>
 		[HttpPut]
-		public IActionResult UpdateMusician(MusicianDTO musicianDto)
+		public IActionResult UpdateMusician(MusicianDto musicianDto)
 		{
 			Musician musician = _mapper.Map<Musician>(musicianDto);
 			_musicianService.Update(musician);

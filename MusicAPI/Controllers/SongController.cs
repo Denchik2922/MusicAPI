@@ -2,7 +2,7 @@
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using MusicAPI.ModelsDTO;
+using MusicAPI.ModelsDto;
 using System.Collections.Generic;
 
 namespace MusicAPI.Controllers
@@ -38,7 +38,7 @@ namespace MusicAPI.Controllers
 		public IActionResult GetSongById(int id)
 		{
 			var song = _songService.GetByIdWithInclude(id);
-			SongDTO songDto = _mapper.Map<SongDTO>(song);
+			SongDto songDto = _mapper.Map<SongDto>(song);
 			return Ok(songDto);
 		}
 
@@ -47,7 +47,7 @@ namespace MusicAPI.Controllers
 		/// Add song
 		/// </summary>
 		[HttpPost]
-		public IActionResult AddSong(SongDTO songDto)
+		public IActionResult AddSong(SongDto songDto)
 		{
 			Song song = _mapper.Map<Song>(songDto);
 			_songService.Add(song);
@@ -68,7 +68,7 @@ namespace MusicAPI.Controllers
 		/// Update song
 		/// </summary>
 		[HttpPut]
-		public IActionResult UpdateSong(SongDTO songDto)
+		public IActionResult UpdateSong(SongDto songDto)
 		{
 			Song song = _mapper.Map<Song>(songDto);
 			_songService.Update(song);

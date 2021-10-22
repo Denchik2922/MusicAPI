@@ -3,7 +3,7 @@ using BLL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using MusicAPI.ModelsDTO;
+using MusicAPI.ModelsDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +42,7 @@ namespace MusicAPI.Controllers
 		public IActionResult GetGroupById(int id)
 		{
 			var group = _groupService.GetByIdWithInclude(id);
-			GroupDTO groupDto = _mapper.Map<GroupDTO>(group);
+			GroupDto groupDto = _mapper.Map<GroupDto>(group);
 			return Ok(groupDto);
 		}
 
@@ -50,7 +50,7 @@ namespace MusicAPI.Controllers
 		/// Add group
 		/// </summary>
 		[HttpPost]
-		public IActionResult AddGroup(GroupDTO groupDto)
+		public IActionResult AddGroup(GroupDto groupDto)
 		{
 			Group group = _mapper.Map<Group>(groupDto);
 			_groupService.Add(group);
@@ -62,7 +62,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
-		public IActionResult AddMemberToGroup(int groupId, MusicianDTO musicianDto)
+		public IActionResult AddMemberToGroup(int groupId, MusicianDto musicianDto)
 		{
 			Musician musician = _mapper.Map<Musician>(musicianDto);
 			_groupService.AddMemberToGroup(groupId, musician);
@@ -74,7 +74,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
-		public IActionResult AddGenreToGroup(int groupId, GenreDTO genreDTO)
+		public IActionResult AddGenreToGroup(int groupId, GenreDto genreDTO)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDTO);
 			_groupService.AddGenreToGroup(groupId, genre);
@@ -118,7 +118,7 @@ namespace MusicAPI.Controllers
 		/// Update group
 		/// </summary>
 		[HttpPut]
-		public IActionResult UpdateGroup(GroupDTO groupDto)
+		public IActionResult UpdateGroup(GroupDto groupDto)
 		{
 			Group group = _mapper.Map<Group>(groupDto);
 			_groupService.Update(group);

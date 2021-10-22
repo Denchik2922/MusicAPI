@@ -1,6 +1,7 @@
 ﻿using BLL.Interfaces;
 using DAL;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,9 @@ namespace BLL.Services
 	{
 		private readonly IConcertApiRepository _concertApi;
 
-		public ConcertService(MusicContext context, IConcertApiRepository concertApi) : base(context)
+		public ConcertService(MusicContext context,
+							  IConcertApiRepository concertApi,
+							  ILogger<ConcertService> logger) : base(context, logger)
 		{
 			_concertApi = concertApi;
 		}
@@ -22,8 +25,16 @@ namespace BLL.Services
 
 		public Concert GetByIdWithInclude(int id)
 		{
-			return _context.Concerts
-				.Where(c => c.Id == id)
+			var concerts = _context.Concerts
+				.Where(c => c.Id == id);
+			if (concerts.Count() < 1)
+			{
+
+				_logger.LogWarning($"Concert with id - {id} not found");
+				throw new Exception($"Concert with id - {id} not found");
+			}
+
+			return concerts
 				.Include(c => c.Stats)
 				.Include(c => c.Venue)
 				.FirstOrDefault();
@@ -51,8 +62,17 @@ namespace BLL.Services
 				entity.Stats = newStats;
 			}
 
-			_dbSet.Add(entity);
-			_context.SaveChanges();
+			try
+			{
+				_dbSet.Add(entity);
+				_context.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex,"Error adding data");
+				throw new Exception($"Error adding data");
+			}
+			
 		}
 
 		private void AddRange(IEnumerable<Concert> concerts)

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MusicAPI.ModelsDTO
+namespace MusicAPI.ModelsDto
 {
-	public class VenueDTO
+	public class VenueDto
 	{
 		public string Name { get; set; }
 		public string Timezone { get; set; }

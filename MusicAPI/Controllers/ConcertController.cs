@@ -3,7 +3,7 @@ using BLL.Interfaces;
 using BLL.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MusicAPI.ModelsDTO;
+using MusicAPI.ModelsDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace MusicAPI.Controllers
 		public async Task<IActionResult> GetAllConcerts()
 		{
 			var concerts = await _concertApi.GetAllConcertsWithInclude();
-			List<ConcertDTO> concertsDto = _mapper.Map<List<ConcertDTO>>(concerts);
+			List<ConcertDto> concertsDto = _mapper.Map<List<ConcertDto>>(concerts);
 
 			return Ok(concertsDto);
 		}
@@ -37,7 +37,7 @@ namespace MusicAPI.Controllers
 		public IActionResult GetAllConcerts(int id)
 		{
 			var concert = _concertApi.GetByIdWithInclude(id);
-			ConcertDTO concertDto = _mapper.Map<ConcertDTO>(concert);
+			ConcertDto concertDto = _mapper.Map<ConcertDto>(concert);
 
 			return Ok(concertDto);
 		}

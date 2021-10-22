@@ -1,6 +1,7 @@
 ﻿using BLL.Interfaces;
 using DAL;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +14,29 @@ namespace BLL.Services
 	{
 		protected readonly MusicContext _context;
 		protected readonly DbSet<TEntity> _dbSet;
+		protected readonly ILogger<BaseGenericService<TEntity>> _logger;
 
-		public BaseGenericService(MusicContext context)
+		public BaseGenericService(MusicContext context, ILogger<BaseGenericService<TEntity>> logger)
 		{
 			_context = context;
 			_dbSet = context.Set<TEntity>();
+			_logger = logger;
 		}
 
 		public virtual void Add(TEntity entity)
 		{
-			_dbSet.Add(entity);
-			_context.SaveChanges();
+			try
+			{
+				_dbSet.Add(entity);
+				_context.SaveChanges();
+
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex,"Error adding data");
+				throw new Exception("Error adding data");
+			}
+			
 		}
 
 		public IEnumerable<TEntity> GetAll()
@@ -33,19 +46,44 @@ namespace BLL.Services
 
 		public TEntity GetById(int id)
 		{
-			return _dbSet.Find(id);
+
+			TEntity entity = _dbSet.Find(id);
+			if (entity == null)
+			{
+				_logger.LogWarning($"Entity with id - {id} not found");
+				throw new Exception($"Entity with id - {id} not found");
+			}
+			return entity;
 		}
 
 		public void RemoveById(int id)
 		{
-			_dbSet.Remove(GetById(id));
-			_context.SaveChanges();
+			try
+			{
+				_dbSet.Remove(GetById(id));
+				_context.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex,"Error removing data");
+				throw new Exception($"Error removing data");
+			}
+
 		}
 
 		public void Update(TEntity entity)
 		{
-			_context.Entry(entity).State = EntityState.Modified;
-			_context.SaveChanges();
+			try
+			{
+				_context.Entry(entity).State = EntityState.Modified;
+				_context.SaveChanges();
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError($"Error updating data\nException {ex}");
+				throw new Exception($"Error updating data");
+			}
+			
 		}
 	}
 }

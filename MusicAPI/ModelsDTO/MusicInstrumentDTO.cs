@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MusicAPI.ModelsDTO
+namespace MusicAPI.ModelsDto
 {
-	public class MusicInstrumentDTO
+	public class MusicInstrumentDto
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }

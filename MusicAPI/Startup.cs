@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using System.IO;
 using MusicAPI.Infrastructure;
 using System;
+using Microsoft.Extensions.Logging;
 
 namespace MusicAPI
 {
@@ -57,13 +58,21 @@ namespace MusicAPI
 			services.AddAutoMapper(typeof(Startup));
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
 		{
-			if (env.IsDevelopment())
+			var path = Directory.GetCurrentDirectory();
+			loggerFactory.AddFile($"{path}\\Logs\\Log.txt");
+
+			if (!env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
 				app.UseSwagger();
 				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MusicAPI v1"));
+			}
+			else
+			{
+				app.UseExceptionHandler("/Error");
+
 			}
 
 

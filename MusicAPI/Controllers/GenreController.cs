@@ -2,7 +2,7 @@
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using MusicAPI.ModelsDTO;
+using MusicAPI.ModelsDto;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -39,7 +39,7 @@ namespace MusicAPI.Controllers
 		public IActionResult GetGenreById(int id)
 		{
 			var genre = _genreService.GetById(id);
-			GenreDTO genreDto = _mapper.Map<GenreDTO>(genre);
+			GenreDto genreDto = _mapper.Map<GenreDto>(genre);
 			return Ok(genreDto);
 		}
 
@@ -48,7 +48,7 @@ namespace MusicAPI.Controllers
 		/// Add genre
 		/// </summary>
 		[HttpPost]
-		public IActionResult AddGenre(GenreDTO genreDto)
+		public IActionResult AddGenre(GenreDto genreDto)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDto);
 			_genreService.Add(genre);
@@ -69,7 +69,7 @@ namespace MusicAPI.Controllers
 		/// Update genre
 		/// </summary>
 		[HttpPut]
-		public IActionResult UpdateGenre(GenreDTO genreDto)
+		public IActionResult UpdateGenre(GenreDto genreDto)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDto);
 			_genreService.Update(genre);

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MusicAPI.ModelsDTO
+namespace MusicAPI.ModelsDto
 {
-	public class GroupDTO
+	public class GroupDto
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Country { get; set; }
-		public List<MusicianDTO> Members { get; set; }
-		public List<GenreDTO> Genres { get; set; }
+		public List<MusicianDto> Members { get; set; }
+		public List<GenreDto> Genres { get; set; }
 	}
 }
