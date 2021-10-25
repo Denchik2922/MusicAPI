@@ -39,7 +39,7 @@ namespace BLL.Services
 			
 		}
 
-		public IEnumerable<TEntity> GetAll()
+		public virtual IEnumerable<TEntity> GetAll()
 		{
 			return _dbSet.ToList();
 		}

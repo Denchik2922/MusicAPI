@@ -12,6 +12,9 @@ using System.IO;
 using MusicAPI.Infrastructure;
 using System;
 using Microsoft.Extensions.Logging;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MusicAPI
 {
@@ -29,6 +32,29 @@ namespace MusicAPI
 			services.AddControllers().AddNewtonsoftJson(options =>
 			options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
+			//Configure jwt authentication
+			var secret = Configuration.GetSection("JwtSettings")["Secret"];
+
+			var key = Encoding.ASCII.GetBytes(secret);
+			services.AddAuthentication(x =>
+			{
+				x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddJwtBearer(x =>
+			{
+				x.RequireHttpsMetadata = false;
+				x.SaveToken = true;
+				x.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateIssuerSigningKey = true,
+					IssuerSigningKey = new SymmetricSecurityKey(key),
+					ValidateIssuer = false,
+					ValidateAudience = false
+				};
+			});
+
+			//Swagger
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "MusicAPI", Version = "v1" });
@@ -52,6 +78,7 @@ namespace MusicAPI
 			services.AddScoped<IMusicAlbumService, MusicAlbumService>();
 			services.AddScoped<IConcertService, ConcertService>();
 			services.AddScoped<IStatisticService, StatisticService>();
+			services.AddScoped<IAuthService, AuthService>();
 			services.AddSingleton<IConcertApiRepository, ConcertApiRepository>();
 
 			//Add AutoMapper
@@ -63,7 +90,7 @@ namespace MusicAPI
 			var path = Directory.GetCurrentDirectory();
 			loggerFactory.AddFile($"{path}\\Logs\\Log.txt");
 
-			if (!env.IsDevelopment())
+			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
 				app.UseSwagger();
@@ -75,10 +102,17 @@ namespace MusicAPI
 
 			}
 
-
 			app.UseHttpsRedirection();
 
 			app.UseRouting();
+
+			// global cors policy
+			app.UseCors(x => x
+				.AllowAnyOrigin()
+				.AllowAnyMethod()
+				.AllowAnyHeader());
+
+			app.UseAuthentication();
 
 			app.UseAuthorization();
 

@@ -19,9 +19,14 @@ namespace DAL
 		public DbSet<Concert> Concerts { get; set; }
 		public DbSet<Stat> Stats { get; set; }
 		public DbSet<Venue> Venues { get; set; }
+		public DbSet<User> Users { get; set; }
+		public DbSet<Role> Roles { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			modelBuilder.Entity<User>()
+			.HasIndex(u => new { u.Username, u.Email }).IsUnique();
+
 			modelBuilder.Entity<Musician>()
 			.HasMany(m => m.MusicInstruments)
 			.WithMany(i => i.Musicians);
