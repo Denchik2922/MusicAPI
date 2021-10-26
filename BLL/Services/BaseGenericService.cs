@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace BLL.Services
 {
@@ -23,12 +24,12 @@ namespace BLL.Services
 			_logger = logger;
 		}
 
-		public virtual void Add(TEntity entity)
+		public async virtual Task Add(TEntity entity)
 		{
 			try
 			{
-				_dbSet.Add(entity);
-				_context.SaveChanges();
+				await _dbSet.AddAsync(entity);
+				await _context.SaveChangesAsync();
 
 			}
 			catch (Exception ex)
@@ -39,23 +40,24 @@ namespace BLL.Services
 			
 		}
 
-		public virtual IEnumerable<TEntity> GetAll()
+		public async virtual Task<IEnumerable<TEntity>> GetAll()
 		{
-			return _dbSet.AsNoTracking().ToList();
+			return await _dbSet.AsNoTracking().ToListAsync();
 		}
 
-		public TEntity GetById(int id)
+		public async Task<TEntity> GetById(int id)
 		{
-			TEntity entity = _dbSet.Find(id);
+			TEntity entity = await _dbSet.FindAsync(id);
 			return entity;
 		}
 
-		public void RemoveById(int id)
+		public async Task RemoveById(int id)
 		{
 			try
 			{
-				_dbSet.Remove(GetById(id));
-				_context.SaveChanges();
+				var entity = await GetById(id);
+				 _dbSet.Remove(entity);
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -65,12 +67,12 @@ namespace BLL.Services
 
 		}
 
-		public void Update(TEntity entity)
+		public async Task Update(TEntity entity)
 		{
 			try
 			{
 				_context.Entry(entity).State = EntityState.Modified;
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{

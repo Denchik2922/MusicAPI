@@ -40,7 +40,7 @@ namespace MusicAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public IActionResult Register(UserRegisterDto userModel)
+        public async Task<IActionResult> Register(UserRegisterDto userModel)
         {
             if (!ModelState.IsValid)
             {
@@ -48,7 +48,7 @@ namespace MusicAPI.Controllers
             }
             var user = _mapper.Map<User>(userModel);
 
-            _authService.Register(user);
+            await _authService.Register(user);
 
             return Ok();
         }
@@ -56,9 +56,9 @@ namespace MusicAPI.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var users = _authService.GetAll();
+            var users = await _authService.GetAll();
 			if (users == null)
 			{
                 return NotFound("Users are empty");

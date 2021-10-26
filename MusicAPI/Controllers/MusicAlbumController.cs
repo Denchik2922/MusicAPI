@@ -6,6 +6,7 @@ using Models;
 using MusicAPI.ModelsDto;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace MusicAPI.Controllers
 {
@@ -27,9 +28,9 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		/// <returns>List music albums</returns>
 		[HttpGet]
-		public IActionResult GetAllMusicAlbum()
+		public async Task<IActionResult> GetAllMusicAlbum()
 		{
-			var albums = _albumService.GetAll();
+			var albums = await _albumService.GetAll();
 			if (albums == null)
 			{
 				return NotFound();
@@ -59,10 +60,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
-		public IActionResult AddMusicAlbum(MusicAlbumDto musicAlbumDto)
+		public async Task<IActionResult> AddMusicAlbum(MusicAlbumDto musicAlbumDto)
 		{
 			MusicAlbum musicAlbum = _mapper.Map<MusicAlbum>(musicAlbumDto);
-			_albumService.Add(musicAlbum);
+			await _albumService.Add(musicAlbum);
 			return Ok("Music album added");
 		}
 
@@ -72,10 +73,10 @@ namespace MusicAPI.Controllers
 		[HttpPost]
 		[Route("[action]")]
 		[Authorize(Roles = "Admin")]
-		public IActionResult AddSong(int albumId, SongDto songDto)
+		public async Task<IActionResult> AddSong(int albumId, SongDto songDto)
 		{
 			Song song = _mapper.Map<Song>(songDto);
-			_albumService.AddSongToAlbum(albumId, song);
+			await _albumService.AddSongToAlbum(albumId, song);
 			return Ok("Song added");
 		}
 
@@ -85,10 +86,10 @@ namespace MusicAPI.Controllers
 		[HttpPost]
 		[Route("[action]")]
 		[Authorize(Roles = "Admin")]
-		public IActionResult AddGenre(int albumId, GenreDto genreDTO)
+		public async Task<IActionResult> AddGenre(int albumId, GenreDto genreDTO)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDTO);
-			_albumService.AddGenreToAlbum(albumId, genre);
+			await _albumService.AddGenreToAlbum(albumId, genre);
 			return Ok("Genre added");
 		}
 
@@ -97,9 +98,9 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpDelete]
 		[Authorize(Roles = "Admin")]
-		public IActionResult RemoveMusicAlbum(int id)
+		public async Task<IActionResult> RemoveMusicAlbum(int id)
 		{
-			_albumService.RemoveById(id);
+			await _albumService.RemoveById(id);
 			return Ok("Music album removed");
 		}
 
@@ -109,9 +110,9 @@ namespace MusicAPI.Controllers
 		[HttpDelete]
 		[Route("[action]")]
 		[Authorize(Roles = "Admin")]
-		public IActionResult RemoveSong(int albumId, int songId)
+		public async Task<IActionResult> RemoveSong(int albumId, int songId)
 		{
-			_albumService.RemoveSongToAlbum(albumId, songId);
+			await _albumService.RemoveSongToAlbum(albumId, songId);
 			return Ok("Song removed");
 		}
 
@@ -121,9 +122,9 @@ namespace MusicAPI.Controllers
 		[HttpDelete]
 		[Route("[action]")]
 		[Authorize(Roles = "Admin")]
-		public IActionResult RemoveGenre(int albumId, int genreId)
+		public async Task<IActionResult> RemoveGenre(int albumId, int genreId)
 		{
-			_albumService.RemoveGenreToAlbum(albumId, genreId);
+			await _albumService.RemoveGenreToAlbum(albumId, genreId);
 			return Ok("Genre removed");
 		}
 
@@ -132,10 +133,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPut]
 		[Authorize(Roles = "Admin")]
-		public IActionResult UpdateMusicAlbum(MusicAlbumDto musicAlbumDto)
+		public async Task<IActionResult> UpdateMusicAlbum(MusicAlbumDto musicAlbumDto)
 		{
 			MusicAlbum musicAlbum = _mapper.Map<MusicAlbum>(musicAlbumDto);
-			_albumService.Update(musicAlbum);
+			await _albumService.Update(musicAlbum);
 			return Ok("Music album updated");
 		}
 	}

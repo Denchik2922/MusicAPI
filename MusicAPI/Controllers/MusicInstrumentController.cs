@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using MusicAPI.ModelsDto;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MusicAPI.Controllers
 {
@@ -26,9 +27,9 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		/// <returns>List instruments</returns>
 		[HttpGet]
-		public IActionResult GetAllInstruments()
+		public async Task<IActionResult> GetAllInstruments()
 		{
-			var instruments = _instrumentService.GetAll();
+			var instruments = await _instrumentService.GetAll();
 			if (instruments == null)
 			{
 				return NotFound();
@@ -42,9 +43,9 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		/// <returns>Instrument</returns>
 		[HttpGet("{id}")]
-		public IActionResult GetInstrumentById(int id)
+		public async Task<IActionResult> GetInstrumentById(int id)
 		{
-			var instrument = _instrumentService.GetById(id);
+			var instrument = await _instrumentService.GetById(id);
 			if (instrument == null)
 			{
 				return NotFound();
@@ -59,10 +60,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
-		public IActionResult AddInstrument(MusicInstrumentDto instrumentDto)
+		public async Task<IActionResult> AddInstrument(MusicInstrumentDto instrumentDto)
 		{
 			MusicInstrument instrument = _mapper.Map<MusicInstrument>(instrumentDto);
-			_instrumentService.Add(instrument);
+			await _instrumentService.Add(instrument);
 			return Ok("Instrument added");
 		}
 
@@ -71,10 +72,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpDelete]
 		[Authorize(Roles = "Admin")]
-		public IActionResult RemoveInstrument(int id)
+		public async Task<IActionResult> RemoveInstrument(int id)
 		{
 
-			_instrumentService.RemoveById(id);
+			await _instrumentService.RemoveById(id);
 			return Ok("Instrument removed");
 		}
 
@@ -83,10 +84,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPut]
 		[Authorize(Roles = "Admin")]
-		public IActionResult UpdateSong(MusicInstrumentDto instrumentDto)
+		public async Task<IActionResult> UpdateSong(MusicInstrumentDto instrumentDto)
 		{
 			MusicInstrument instrument = _mapper.Map<MusicInstrument>(instrumentDto);
-			_instrumentService.Update(instrument);
+			await _instrumentService.Update(instrument);
 			return Ok("Instrument updated");
 		}
 	}

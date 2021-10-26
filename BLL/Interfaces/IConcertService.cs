@@ -6,7 +6,7 @@ namespace BLL.Interfaces
 {
 	public interface IConcertService
 	{
-		void Add(Concert entity);
+		Task Add(Concert entity);
 		Task<IEnumerable<Concert>> GetAllConcertsWithInclude();
 		Concert GetByIdWithInclude(int id);
 	}

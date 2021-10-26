@@ -7,6 +7,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace BLL.Services
@@ -18,7 +19,6 @@ namespace BLL.Services
 		public Musician GetByIdWithInclude(int id)
 		{
 			var musicians = _context.Musicians
-				.AsNoTracking()
 				.Where(m => m.Id == id);
 			if (musicians.Count() < 1)
 			{
@@ -33,14 +33,14 @@ namespace BLL.Services
 							.FirstOrDefault();
 		}
 
-		public void AddInstrumentToMusician(int musicianId, MusicInstrument instrument)
+		public async Task AddInstrumentToMusician(int musicianId, MusicInstrument instrument)
 		{
 			Musician musician = GetByIdWithInclude(musicianId);
 
 			try
 			{
 				musician.MusicInstruments.Add(instrument);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -52,14 +52,14 @@ namespace BLL.Services
 			
 		}
 
-		public void RemoveInstrumentToMusician(int musicianId, int instrumentId)
+		public async Task RemoveInstrumentToMusician(int musicianId, int instrumentId)
 		{
 			Musician musician = GetByIdWithInclude(musicianId);
 
 			try
 			{
 				musician.MusicInstruments.RemoveAll(i => i.Id == instrumentId);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -70,14 +70,14 @@ namespace BLL.Services
 			
 		}
 
-		public void AddGenreToMusician(int musicianId, Genre genre)
+		public async Task AddGenreToMusician(int musicianId, Genre genre)
 		{
 			Musician musician = GetByIdWithInclude(musicianId);
 
 			try
 			{
 				musician.Genres.Add(genre);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -87,14 +87,14 @@ namespace BLL.Services
 			}
 		}
 
-		public void RemoveGenreToMusician(int musicianId, int genreId)
+		public async Task RemoveGenreToMusician(int musicianId, int genreId)
 		{
 			Musician musician = GetByIdWithInclude(musicianId);
 
 			try
 			{
 				musician.Genres.RemoveAll(i => i.Id == genreId);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{

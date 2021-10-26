@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Models;
 using MusicAPI.ModelsDto;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MusicAPI.Controllers
 {
@@ -26,9 +27,9 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		/// <returns>List songs</returns>
 		[HttpGet]
-		public IActionResult GetAllSongs()
+		public async Task<IActionResult> GetAllSongs()
 		{
-			var songs = _songService.GetAll();
+			var songs = await _songService.GetAll();
 			if (songs == null)
 			{
 				return NotFound();
@@ -59,10 +60,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
-		public IActionResult AddSong(SongDto songDto)
+		public async Task<IActionResult> AddSong(SongDto songDto)
 		{
 			Song song = _mapper.Map<Song>(songDto);
-			_songService.Add(song);
+			await _songService.Add(song);
 			return Ok("Song added");
 		}
 
@@ -71,9 +72,9 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpDelete]
 		[Authorize(Roles = "Admin")]
-		public IActionResult RemoveSong(int id)
+		public async Task<IActionResult> RemoveSong(int id)
 		{
-			_songService.RemoveById(id);
+			await _songService.RemoveById(id);
 			return Ok("Song removed");
 		}
 
@@ -82,10 +83,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPut]
 		[Authorize(Roles = "Admin")]
-		public IActionResult UpdateSong(SongDto songDto)
+		public async Task<IActionResult> UpdateSong(SongDto songDto)
 		{
 			Song song = _mapper.Map<Song>(songDto);
-			_songService.Update(song);
+			await _songService.Update(song);
 			return Ok("Song updated");
 		}
 	}

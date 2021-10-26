@@ -1,4 +1,5 @@
 ﻿using Models;
+using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
@@ -6,6 +7,6 @@ namespace BLL.Interfaces
 	{
 		string Authenticate(string username, string password);
 		User GetByIdWithInclude(int id);
-		void Register(User user);
+		Task Register(User user);
 	}
 }

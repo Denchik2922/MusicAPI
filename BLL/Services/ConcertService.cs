@@ -26,7 +26,6 @@ namespace BLL.Services
 		public Concert GetByIdWithInclude(int id)
 		{
 			var concerts = _context.Concerts
-				.AsNoTracking()
 				.Where(c => c.Id == id);
 			if (concerts.Count() < 1)
 			{
@@ -41,7 +40,7 @@ namespace BLL.Services
 				.FirstOrDefault();
 		}
 
-		public override void Add(Concert entity)
+		public override async Task Add(Concert entity)
 		{
 			if(entity.Id != 0)
 			{
@@ -65,8 +64,8 @@ namespace BLL.Services
 
 			try
 			{
-				_dbSet.Add(entity);
-				_context.SaveChanges();
+				await _dbSet.AddAsync(entity);
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -76,29 +75,31 @@ namespace BLL.Services
 			
 		}
 
-		private void AddRange(IEnumerable<Concert> concerts)
+		private async Task AddRange(IEnumerable<Concert> concerts)
 		{
 			var newConcerts = concerts.Where(c => _context.Concerts.
 															FirstOrDefault(con => con.Title.Contains(c.Title)) == default).
 															ToList();
 			foreach(var concert in newConcerts)
 			{
-				Add(concert);
+				await Add(concert);
 			}
 		} 
 
 		public async Task<IEnumerable<Concert>> GetAllConcertsWithInclude()
 		{
-			var concerts = _context.Concerts
+			var concerts = await _context.Concerts
 				.Include(c => c.Stats)
-				.Include(c => c.Venue).ToList();
+				.Include(c => c.Venue)
+				.AsNoTracking()
+				.ToListAsync();
 
 			if (concerts.Count <= 0 || concerts == null)
 			{
 				concerts = await _concertApi.GetAllConcerts();
 				if(concerts != null)
 				{
-					AddRange(concerts);
+					await AddRange(concerts);
 				}
 			}
 

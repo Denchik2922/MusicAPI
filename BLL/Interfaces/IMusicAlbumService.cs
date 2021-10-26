@@ -1,13 +1,14 @@
 ﻿using Models;
+using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
 	public interface IMusicAlbumService : IGenericService<MusicAlbum>
 	{
-		void AddGenreToAlbum(int albumId, Genre genre);
-		void AddSongToAlbum(int albumId, Song song);
+		Task AddGenreToAlbum(int albumId, Genre genre);
+		Task AddSongToAlbum(int albumId, Song song);
 		MusicAlbum GetByIdWithInclude(int id);
-		void RemoveGenreToAlbum(int albumId, int genreId);
-		void RemoveSongToAlbum(int albumId, int songId);
+		Task RemoveGenreToAlbum(int albumId, int genreId);
+		Task RemoveSongToAlbum(int albumId, int songId);
 	}
 }

@@ -6,6 +6,7 @@ using Models;
 using MusicAPI.ModelsDto;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace MusicAPI.Controllers
 {
@@ -27,9 +28,9 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		/// <returns>List genres</returns>
 		[HttpGet]
-		public IActionResult GetAllGenres()
+		public async Task<IActionResult> GetAllGenres()
 		{
-			var genres = _genreService.GetAll();
+			var genres = await _genreService.GetAll();
 			if (genres == null)
 			{
 				return NotFound();
@@ -43,9 +44,9 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		/// <returns>Group</returns>
 		[HttpGet("{id}")]
-		public IActionResult GetGenreById(int id)
+		public async Task<IActionResult> GetGenreById(int id)
 		{
-			var genre = _genreService.GetById(id);
+			var genre = await _genreService.GetById(id);
 			if (genre == null)
 			{
 				return NotFound();
@@ -60,10 +61,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[Authorize(Roles = "Admin")]
 		[HttpPost]
-		public IActionResult AddGenre(GenreDto genreDto)
+		public async Task<IActionResult> AddGenre(GenreDto genreDto)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDto);
-			_genreService.Add(genre);
+			await _genreService.Add(genre);
 			return Ok("Genre added");
 		}
 
@@ -72,9 +73,9 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[Authorize(Roles = "Admin")]
 		[HttpDelete]
-		public IActionResult RemoveGenre(int id)
+		public async Task<IActionResult> RemoveGenre(int id)
 		{
-			_genreService.RemoveById(id);
+			await _genreService.RemoveById(id);
 			return Ok("Genre removed");
 		}
 
@@ -83,10 +84,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[Authorize(Roles = "Admin")]
 		[HttpPut]
-		public IActionResult UpdateGenre(GenreDto genreDto)
+		public async Task<IActionResult> UpdateGenre(GenreDto genreDto)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDto);
-			_genreService.Update(genre);
+			await _genreService.Update(genre);
 			return Ok("Genre updated");
 		}
 	}

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Models;
 using System;
 using System.Linq;
-
+using System.Threading.Tasks;
 
 namespace BLL.Services
 {
@@ -16,7 +16,6 @@ namespace BLL.Services
 		public MusicAlbum GetByIdWithInclude(int id)
 		{
 			var musicAlbums = _context.MusicAlbums
-				.AsNoTracking()
 				.Where(m => m.Id == id);
 			if (musicAlbums.Count() < 1)
 			{
@@ -31,14 +30,14 @@ namespace BLL.Services
 				.FirstOrDefault();
 		}
 
-		public void AddSongToAlbum(int albumId, Song song)
+		public async Task AddSongToAlbum(int albumId, Song song)
 		{
 
 			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
 			try
 			{
 				musicAlbum.Songs.Add(song);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -49,13 +48,13 @@ namespace BLL.Services
 
 		}
 
-		public void RemoveSongToAlbum(int albumId, int songId)
+		public async Task RemoveSongToAlbum(int albumId, int songId)
 		{
 			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
 			try
 			{
 				musicAlbum.Songs.RemoveAll(i => i.Id == songId);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -66,14 +65,14 @@ namespace BLL.Services
 			
 		}
 
-		public void AddGenreToAlbum(int albumId, Genre genre)
+		public async Task AddGenreToAlbum(int albumId, Genre genre)
 		{
 			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
 
 			try
 			{
 				musicAlbum.Genres.Add(genre);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -84,14 +83,14 @@ namespace BLL.Services
 			
 		}
 
-		public void RemoveGenreToAlbum(int albumId, int genreId)
+		public async Task RemoveGenreToAlbum(int albumId, int genreId)
 		{
 			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
 
 			try
 			{
 				musicAlbum.Genres.RemoveAll(i => i.Id == genreId);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{

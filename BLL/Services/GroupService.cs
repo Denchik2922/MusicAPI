@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BLL.Services
 {
@@ -15,7 +16,6 @@ namespace BLL.Services
 		public Group GetByIdWithInclude(int id)
 		{
 			var groups = _context.Groups
-				.AsNoTracking()
 				.Where(g => g.Id == id);
 			if (groups.Count() < 1)
 			{
@@ -30,14 +30,14 @@ namespace BLL.Services
 				.FirstOrDefault();
 		}
 
-		public void AddMemberToGroup(int groupId, Musician musician)
+		public async Task AddMemberToGroup(int groupId, Musician musician)
 		{
 			Group group = GetByIdWithInclude(groupId);
 
 			try
 			{
 				group.Members.Add(musician);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -48,14 +48,14 @@ namespace BLL.Services
 			
 		}
 
-		public void RemoveMemberToGroup(int groupId, int memberId)
+		public async Task RemoveMemberToGroup(int groupId, int memberId)
 		{
 			Group group = GetByIdWithInclude(groupId);
 
 			try
 			{
 				group.Members.RemoveAll(i => i.Id == memberId);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -66,14 +66,14 @@ namespace BLL.Services
 			
 		}
 
-		public void AddGenreToGroup(int groupId, Genre genre)
+		public async Task AddGenreToGroup(int groupId, Genre genre)
 		{
 			Group group = GetByIdWithInclude(groupId);
 
 			try
 			{
 				group.Genres.Add(genre);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{
@@ -84,14 +84,14 @@ namespace BLL.Services
 			}
 		}
 
-		public void RemoveGenreToGroup(int groupId, int genreId)
+		public async Task RemoveGenreToGroup(int groupId, int genreId)
 		{
 			Group group = GetByIdWithInclude(groupId);
 
 			try
 			{
 				group.Genres.RemoveAll(i => i.Id == genreId);
-				_context.SaveChanges();
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{

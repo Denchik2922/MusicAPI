@@ -1,13 +1,14 @@
 ﻿using Models;
+using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
 	public interface IGroupService : IGenericService<Group>
 	{
-		void AddGenreToGroup(int groupId, Genre genre);
-		void AddMemberToGroup(int groupId, Musician musician);
+		Task AddGenreToGroup(int groupId, Genre genre);
+		Task AddMemberToGroup(int groupId, Musician musician);
 		Group GetByIdWithInclude(int id);
-		void RemoveGenreToGroup(int groupId, int genreId);
-		void RemoveMemberToGroup(int groupId, int memberId);
+		Task RemoveGenreToGroup(int groupId, int genreId);
+		Task RemoveMemberToGroup(int groupId, int memberId);
 	}
 }

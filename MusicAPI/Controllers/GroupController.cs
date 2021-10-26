@@ -30,9 +30,9 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		/// <returns>List groups</returns>
 		[HttpGet]
-		public IActionResult GetAllGroups()
+		public async Task<IActionResult> GetAllGroups()
 		{
-			var groups = _groupService.GetAll();
+			var groups = await _groupService.GetAll();
 			if (groups == null)
 			{
 				return NotFound();
@@ -62,10 +62,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
-		public IActionResult AddGroup(GroupDto groupDto)
+		public async Task<IActionResult> AddGroup(GroupDto groupDto)
 		{
 			Group group = _mapper.Map<Group>(groupDto);
-			_groupService.Add(group);
+			await _groupService.Add(group);
 			return Ok("Group added");
 		}
 
@@ -75,10 +75,10 @@ namespace MusicAPI.Controllers
 		[HttpPost]
 		[Route("[action]")]
 		[Authorize(Roles = "Admin")]
-		public IActionResult AddMemberToGroup(int groupId, MusicianDto musicianDto)
+		public async Task<IActionResult> AddMemberToGroup(int groupId, MusicianDto musicianDto)
 		{
 			Musician musician = _mapper.Map<Musician>(musicianDto);
-			_groupService.AddMemberToGroup(groupId, musician);
+			await _groupService.AddMemberToGroup(groupId, musician);
 			return Ok("Member added");
 		}
 
@@ -88,10 +88,10 @@ namespace MusicAPI.Controllers
 		[HttpPost]
 		[Route("[action]")]
 		[Authorize(Roles = "Admin")]
-		public IActionResult AddGenreToGroup(int groupId, GenreDto genreDTO)
+		public async Task<IActionResult> AddGenreToGroup(int groupId, GenreDto genreDTO)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDTO);
-			_groupService.AddGenreToGroup(groupId, genre);
+			await _groupService.AddGenreToGroup(groupId, genre);
 			return Ok("Genre added");
 		}
 
@@ -100,10 +100,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpDelete]
 		[Authorize(Roles = "Admin")]
-		public IActionResult RemoveGroup(int id)
+		public async Task<IActionResult> RemoveGroup(int id)
 		{
 
-			_groupService.RemoveById(id);
+			await _groupService.RemoveById(id);
 			return Ok("Group removed");
 		}
 
@@ -113,9 +113,9 @@ namespace MusicAPI.Controllers
 		[HttpDelete]
 		[Route("[action]")]
 		[Authorize(Roles = "Admin")]
-		public IActionResult RemoveMember(int groupId, int memberId)
+		public async Task<IActionResult> RemoveMember(int groupId, int memberId)
 		{
-			_groupService.RemoveMemberToGroup(groupId, memberId);
+			await _groupService.RemoveMemberToGroup(groupId, memberId);
 			return Ok("Member removed");
 		}
 
@@ -125,9 +125,9 @@ namespace MusicAPI.Controllers
 		[HttpDelete]
 		[Route("[action]")]
 		[Authorize(Roles = "Admin")]
-		public IActionResult RemoveGenre(int groupId, int genreId)
+		public async Task<IActionResult> RemoveGenre(int groupId, int genreId)
 		{
-			_groupService.RemoveGenreToGroup(groupId, genreId);
+			await _groupService.RemoveGenreToGroup(groupId, genreId);
 			return Ok("Genre removed");
 		}
 
@@ -136,10 +136,10 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPut]
 		[Authorize(Roles = "Admin")]
-		public IActionResult UpdateGroup(GroupDto groupDto)
+		public async Task<IActionResult> UpdateGroup(GroupDto groupDto)
 		{
 			Group group = _mapper.Map<Group>(groupDto);
-			_groupService.Update(group);
+			await _groupService.Update(group);
 			return Ok("Group updated");
 		}
 	}
