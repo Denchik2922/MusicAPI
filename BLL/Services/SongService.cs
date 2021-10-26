@@ -15,6 +15,7 @@ namespace BLL.Services
 		public Song GetByIdWithInclude(int id)
 		{
 			var songs = _context.Songs
+				.AsNoTracking()
 				.Where(m => m.Id == id);
 			if (songs.Count() < 1)
 			{

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http.Description;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MusicAPI.Controllers
 {
@@ -34,7 +35,13 @@ namespace MusicAPI.Controllers
 		[HttpGet]
 		public IActionResult GetAllMusicians()
 		{
-			return Ok(_musicianService.GetAll());
+			var musicians = _musicianService.GetAll();
+			if (musicians == null)
+			{
+				return NotFound();
+			}
+			IEnumerable<MusicianDto> musiciansDto = _mapper.Map<IEnumerable<MusicianDto>>(musicians);
+			return Ok(musiciansDto);
 		}
 
 		/// <summary>
@@ -45,6 +52,10 @@ namespace MusicAPI.Controllers
 		public IActionResult GetMusicianById(int id)
 		{
 			var musician = _musicianService.GetByIdWithInclude(id);
+			if (musician == null)
+			{
+				return NotFound();
+			}
 			MusicianDto musicianDto = _mapper.Map<MusicianDto>(musician);
 			return Ok(musicianDto);
 			
@@ -55,6 +66,7 @@ namespace MusicAPI.Controllers
 		/// Add musician
 		/// </summary>
 		[HttpPost]
+		[Authorize(Roles = "Admin")]
 		public IActionResult AddMusican(MusicianDto musicianDto)
 		{
 			Musician musician = _mapper.Map<Musician>(musicianDto);
@@ -67,6 +79,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult AddMusicInstrument(int id, MusicInstrumentDto instrumentDTO)
 		{
 
@@ -81,6 +94,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult AddGenre(int id, GenreDto genreDTO)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDTO);
@@ -93,6 +107,7 @@ namespace MusicAPI.Controllers
 		/// Remove musician by id
 		/// </summary>
 		[HttpDelete]
+		[Authorize(Roles = "Admin")]
 		public IActionResult RemoveMusician(int id)
 		{
 			_musicianService.RemoveById(id);
@@ -104,6 +119,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpDelete]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult RemoveMusicInstrument(int musicianId, int instrumentId)
 		{
 			_musicianService.RemoveInstrumentToMusician(musicianId, instrumentId);
@@ -115,6 +131,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpDelete]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult RemoveGenre(int musicianId, int genreId)
 		{
 			_musicianService.RemoveGenreToMusician(musicianId, genreId);
@@ -125,6 +142,7 @@ namespace MusicAPI.Controllers
 		/// Update musician
 		/// </summary>
 		[HttpPut]
+		[Authorize(Roles = "Admin")]
 		public IActionResult UpdateMusician(MusicianDto musicianDto)
 		{
 			Musician musician = _mapper.Map<Musician>(musicianDto);

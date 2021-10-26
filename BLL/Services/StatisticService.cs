@@ -24,6 +24,7 @@ namespace BLL.Services
 		{
 			var instrumens = _context.MusicInstruments.
 				Include(i => i.Musicians).
+				AsNoTracking().
 				Where(i => i.Musicians.Count > 0).
 				OrderByDescending(i => i.Musicians.Count).
 				Take(5).
@@ -36,6 +37,7 @@ namespace BLL.Services
 		{
 			var avarage = _context.Concerts.
 				Include(c => c.Stats).
+				AsNoTracking().
 				ToList().
 				Where(c => c.Datetime_Local.Month == mouth).
 				Average(c => ParseAveragePrice(c.Stats.Average_Price.Trim()));
@@ -58,6 +60,7 @@ namespace BLL.Services
 		{
 			var countries = _context.Musicians.
 				Include(m => m.MusicInstruments).
+				AsNoTracking().
 				ToList().
 				GroupBy(m => m.Country).
 				Select(g => new CountryWithMusicians

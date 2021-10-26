@@ -41,18 +41,12 @@ namespace BLL.Services
 
 		public virtual IEnumerable<TEntity> GetAll()
 		{
-			return _dbSet.ToList();
+			return _dbSet.AsNoTracking().ToList();
 		}
 
 		public TEntity GetById(int id)
 		{
-
 			TEntity entity = _dbSet.Find(id);
-			if (entity == null)
-			{
-				_logger.LogWarning($"Entity with id - {id} not found");
-				throw new Exception($"Entity with id - {id} not found");
-			}
 			return entity;
 		}
 

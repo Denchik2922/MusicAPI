@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using MusicAPI.ModelsDto;
@@ -27,7 +28,13 @@ namespace MusicAPI.Controllers
 		[HttpGet]
 		public IActionResult GetAllInstruments()
 		{
-			return Ok(_instrumentService.GetAll());
+			var instruments = _instrumentService.GetAll();
+			if (instruments == null)
+			{
+				return NotFound();
+			}
+			var instrumenstDto = _mapper.Map<IEnumerable<MusicInstrumentDto>>(instruments);
+			return Ok(instrumenstDto);
 		}
 
 		/// <summary>
@@ -38,6 +45,10 @@ namespace MusicAPI.Controllers
 		public IActionResult GetInstrumentById(int id)
 		{
 			var instrument = _instrumentService.GetById(id);
+			if (instrument == null)
+			{
+				return NotFound();
+			}
 			MusicInstrumentDto instrumentDto = _mapper.Map<MusicInstrumentDto>(instrument);
 			return Ok(instrumentDto);
 		}
@@ -47,6 +58,7 @@ namespace MusicAPI.Controllers
 		/// Add instrument
 		/// </summary>
 		[HttpPost]
+		[Authorize(Roles = "Admin")]
 		public IActionResult AddInstrument(MusicInstrumentDto instrumentDto)
 		{
 			MusicInstrument instrument = _mapper.Map<MusicInstrument>(instrumentDto);
@@ -58,6 +70,7 @@ namespace MusicAPI.Controllers
 		/// Remove instrument
 		/// </summary>
 		[HttpDelete]
+		[Authorize(Roles = "Admin")]
 		public IActionResult RemoveInstrument(int id)
 		{
 
@@ -69,6 +82,7 @@ namespace MusicAPI.Controllers
 		/// Update instrument
 		/// </summary>
 		[HttpPut]
+		[Authorize(Roles = "Admin")]
 		public IActionResult UpdateSong(MusicInstrumentDto instrumentDto)
 		{
 			MusicInstrument instrument = _mapper.Map<MusicInstrument>(instrumentDto);

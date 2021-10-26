@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using MusicAPI.ModelsDto;
@@ -27,7 +28,13 @@ namespace MusicAPI.Controllers
 		[HttpGet]
 		public IActionResult GetAllSongs()
 		{
-			return Ok(_songService.GetAll());
+			var songs = _songService.GetAll();
+			if (songs == null)
+			{
+				return NotFound();
+			}
+			IEnumerable<SongDto> songsDto = _mapper.Map<IEnumerable<SongDto>>(songs);
+			return Ok(songsDto);
 		}
 
 		/// <summary>
@@ -38,6 +45,10 @@ namespace MusicAPI.Controllers
 		public IActionResult GetSongById(int id)
 		{
 			var song = _songService.GetByIdWithInclude(id);
+			if (song == null)
+			{
+				return NotFound();
+			}
 			SongDto songDto = _mapper.Map<SongDto>(song);
 			return Ok(songDto);
 		}
@@ -47,6 +58,7 @@ namespace MusicAPI.Controllers
 		/// Add song
 		/// </summary>
 		[HttpPost]
+		[Authorize(Roles = "Admin")]
 		public IActionResult AddSong(SongDto songDto)
 		{
 			Song song = _mapper.Map<Song>(songDto);
@@ -58,6 +70,7 @@ namespace MusicAPI.Controllers
 		/// Remove song
 		/// </summary>
 		[HttpDelete]
+		[Authorize(Roles = "Admin")]
 		public IActionResult RemoveSong(int id)
 		{
 			_songService.RemoveById(id);
@@ -68,6 +81,7 @@ namespace MusicAPI.Controllers
 		/// Update song
 		/// </summary>
 		[HttpPut]
+		[Authorize(Roles = "Admin")]
 		public IActionResult UpdateSong(SongDto songDto)
 		{
 			Song song = _mapper.Map<Song>(songDto);

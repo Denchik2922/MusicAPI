@@ -15,6 +15,7 @@ namespace BLL.Services
 		public Group GetByIdWithInclude(int id)
 		{
 			var groups = _context.Groups
+				.AsNoTracking()
 				.Where(g => g.Id == id);
 			if (groups.Count() < 1)
 			{

@@ -26,6 +26,7 @@ namespace BLL.Services
 		public Concert GetByIdWithInclude(int id)
 		{
 			var concerts = _context.Concerts
+				.AsNoTracking()
 				.Where(c => c.Id == id);
 			if (concerts.Count() < 1)
 			{

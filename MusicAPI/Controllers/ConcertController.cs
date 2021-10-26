@@ -28,6 +28,10 @@ namespace MusicAPI.Controllers
 		public async Task<IActionResult> GetAllConcerts()
 		{
 			var concerts = await _concertApi.GetAllConcertsWithInclude();
+			if (concerts == null)
+			{
+				return NotFound();
+			}
 			List<ConcertDto> concertsDto = _mapper.Map<List<ConcertDto>>(concerts);
 
 			return Ok(concertsDto);
@@ -37,8 +41,11 @@ namespace MusicAPI.Controllers
 		public IActionResult GetAllConcerts(int id)
 		{
 			var concert = _concertApi.GetByIdWithInclude(id);
+			if (concert == null)
+			{
+				return NotFound();
+			}
 			ConcertDto concertDto = _mapper.Map<ConcertDto>(concert);
-
 			return Ok(concertDto);
 		}
 	}

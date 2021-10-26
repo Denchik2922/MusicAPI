@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -31,7 +32,13 @@ namespace MusicAPI.Controllers
 		[HttpGet]
 		public IActionResult GetAllGroups()
 		{
-			return Ok(_groupService.GetAll());
+			var groups = _groupService.GetAll();
+			if (groups == null)
+			{
+				return NotFound();
+			}
+			IEnumerable<GroupDto> groupsDto = _mapper.Map<IEnumerable<GroupDto>>(groups);
+			return Ok(groupsDto);
 		}
 
 		/// <summary>
@@ -42,6 +49,10 @@ namespace MusicAPI.Controllers
 		public IActionResult GetGroupById(int id)
 		{
 			var group = _groupService.GetByIdWithInclude(id);
+			if (group == null)
+			{
+				return NotFound();
+			}
 			GroupDto groupDto = _mapper.Map<GroupDto>(group);
 			return Ok(groupDto);
 		}
@@ -50,6 +61,7 @@ namespace MusicAPI.Controllers
 		/// Add group
 		/// </summary>
 		[HttpPost]
+		[Authorize(Roles = "Admin")]
 		public IActionResult AddGroup(GroupDto groupDto)
 		{
 			Group group = _mapper.Map<Group>(groupDto);
@@ -62,6 +74,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult AddMemberToGroup(int groupId, MusicianDto musicianDto)
 		{
 			Musician musician = _mapper.Map<Musician>(musicianDto);
@@ -74,6 +87,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult AddGenreToGroup(int groupId, GenreDto genreDTO)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDTO);
@@ -85,6 +99,7 @@ namespace MusicAPI.Controllers
 		/// Remove group
 		/// </summary>
 		[HttpDelete]
+		[Authorize(Roles = "Admin")]
 		public IActionResult RemoveGroup(int id)
 		{
 
@@ -97,6 +112,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpDelete]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult RemoveMember(int groupId, int memberId)
 		{
 			_groupService.RemoveMemberToGroup(groupId, memberId);
@@ -108,6 +124,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpDelete]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult RemoveGenre(int groupId, int genreId)
 		{
 			_groupService.RemoveGenreToGroup(groupId, genreId);
@@ -118,6 +135,7 @@ namespace MusicAPI.Controllers
 		/// Update group
 		/// </summary>
 		[HttpPut]
+		[Authorize(Roles = "Admin")]
 		public IActionResult UpdateGroup(GroupDto groupDto)
 		{
 			Group group = _mapper.Map<Group>(groupDto);

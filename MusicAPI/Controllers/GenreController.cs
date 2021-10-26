@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using MusicAPI.ModelsDto;
@@ -28,7 +29,13 @@ namespace MusicAPI.Controllers
 		[HttpGet]
 		public IActionResult GetAllGenres()
 		{
-			return Ok(_genreService.GetAll());
+			var genres = _genreService.GetAll();
+			if (genres == null)
+			{
+				return NotFound();
+			}
+			IEnumerable<GenreDto> genresDto = _mapper.Map<IEnumerable<GenreDto>>(genres);
+			return Ok(genresDto);
 		}
 
 		/// <summary>
@@ -39,6 +46,10 @@ namespace MusicAPI.Controllers
 		public IActionResult GetGenreById(int id)
 		{
 			var genre = _genreService.GetById(id);
+			if (genre == null)
+			{
+				return NotFound();
+			}
 			GenreDto genreDto = _mapper.Map<GenreDto>(genre);
 			return Ok(genreDto);
 		}
@@ -47,6 +58,7 @@ namespace MusicAPI.Controllers
 		/// <summary>
 		/// Add genre
 		/// </summary>
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public IActionResult AddGenre(GenreDto genreDto)
 		{
@@ -58,6 +70,7 @@ namespace MusicAPI.Controllers
 		/// <summary>
 		/// Remove genre
 		/// </summary>
+		[Authorize(Roles = "Admin")]
 		[HttpDelete]
 		public IActionResult RemoveGenre(int id)
 		{
@@ -68,6 +81,7 @@ namespace MusicAPI.Controllers
 		/// <summary>
 		/// Update genre
 		/// </summary>
+		[Authorize(Roles = "Admin")]
 		[HttpPut]
 		public IActionResult UpdateGenre(GenreDto genreDto)
 		{

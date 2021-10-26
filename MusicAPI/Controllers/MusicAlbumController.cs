@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using MusicAPI.ModelsDto;
@@ -28,7 +29,13 @@ namespace MusicAPI.Controllers
 		[HttpGet]
 		public IActionResult GetAllMusicAlbum()
 		{
-			return Ok(_albumService.GetAll());
+			var albums = _albumService.GetAll();
+			if (albums == null)
+			{
+				return NotFound();
+			}
+			IEnumerable<MusicAlbumDto> albumsDto = _mapper.Map<IEnumerable<MusicAlbumDto>>(albums);
+			return Ok(albumsDto);
 		}
 
 		/// <summary>
@@ -39,6 +46,10 @@ namespace MusicAPI.Controllers
 		public IActionResult GetMusicAlbumById(int id)
 		{
 			var musicAlbum = _albumService.GetByIdWithInclude(id);
+			if (musicAlbum == null)
+			{
+				return NotFound();
+			}
 			MusicAlbumDto musicAlbumDto = _mapper.Map<MusicAlbumDto>(musicAlbum);
 			return Ok(musicAlbumDto);
 		}
@@ -47,6 +58,7 @@ namespace MusicAPI.Controllers
 		/// Add music album
 		/// </summary>
 		[HttpPost]
+		[Authorize(Roles = "Admin")]
 		public IActionResult AddMusicAlbum(MusicAlbumDto musicAlbumDto)
 		{
 			MusicAlbum musicAlbum = _mapper.Map<MusicAlbum>(musicAlbumDto);
@@ -59,6 +71,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult AddSong(int albumId, SongDto songDto)
 		{
 			Song song = _mapper.Map<Song>(songDto);
@@ -71,6 +84,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult AddGenre(int albumId, GenreDto genreDTO)
 		{
 			Genre genre = _mapper.Map<Genre>(genreDTO);
@@ -82,6 +96,7 @@ namespace MusicAPI.Controllers
 		/// Remove music album by id
 		/// </summary>
 		[HttpDelete]
+		[Authorize(Roles = "Admin")]
 		public IActionResult RemoveMusicAlbum(int id)
 		{
 			_albumService.RemoveById(id);
@@ -93,6 +108,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpDelete]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult RemoveSong(int albumId, int songId)
 		{
 			_albumService.RemoveSongToAlbum(albumId, songId);
@@ -104,6 +120,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpDelete]
 		[Route("[action]")]
+		[Authorize(Roles = "Admin")]
 		public IActionResult RemoveGenre(int albumId, int genreId)
 		{
 			_albumService.RemoveGenreToAlbum(albumId, genreId);
@@ -114,6 +131,7 @@ namespace MusicAPI.Controllers
 		/// Update music album
 		/// </summary>
 		[HttpPut]
+		[Authorize(Roles = "Admin")]
 		public IActionResult UpdateMusicAlbum(MusicAlbumDto musicAlbumDto)
 		{
 			MusicAlbum musicAlbum = _mapper.Map<MusicAlbum>(musicAlbumDto);
