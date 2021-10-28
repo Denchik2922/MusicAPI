@@ -18,8 +18,7 @@ namespace BLL.Services
 	public class AuthService : BaseGenericService<User>, IAuthService
 	{
 		private readonly string _secret;
-
-		public AuthService(MusicContext context, ILogger<AuthService> logger, IConfiguration config) : base(context, logger)
+		public AuthService(MusicContext context, IConfiguration config) : base(context)
 		{
 			_secret = config.GetSection("JwtSettings")["Secret"];
 		}
@@ -61,8 +60,7 @@ namespace BLL.Services
 
 			if (user == null)
 			{
-				_logger.LogInformation($"User with username - {username} not found");
-				return null;
+				throw new ArgumentNullException($"User with username - {username} not found");
 			}
 
 			string token = GenerateJwtToken(user);

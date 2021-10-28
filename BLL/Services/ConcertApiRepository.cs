@@ -15,14 +15,12 @@ namespace BLL.Services
 		private readonly HttpClient _httpClient;
 		private readonly string _url;
 		private readonly string _clientId;
-		private readonly ILogger<ConcertApiRepository> _logger;
 
-		public ConcertApiRepository(IConfiguration config, HttpClient httpClient, ILogger<ConcertApiRepository> logger)
+		public ConcertApiRepository(IConfiguration config, HttpClient httpClient)
 		{
 			_httpClient = httpClient;
 			_url = config.GetSection("ConcertApiOptions")["Url"];
 			_clientId = config.GetSection("ConcertApiOptions")["ClientId"];
-			_logger = logger;
 		}
 
 		public async Task<List<Concert>> GetAllConcerts()
@@ -32,15 +30,12 @@ namespace BLL.Services
 			HttpResponseMessage response = await _httpClient.GetAsync(url);
 			if (!response.IsSuccessStatusCode)
 			{
-				_logger.LogError($"Error Get HttpClient, status code {response.StatusCode}");
 				throw new Exception($"Error Get HttpClient, status code {response.StatusCode}");
-
 			}
 
 			string content = await response.Content.ReadAsStringAsync();
 			if (content == null)
 			{
-				_logger.LogError($"Event content is null");
 				throw new ArgumentNullException("Event content is null");
 			}
 

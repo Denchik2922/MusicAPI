@@ -16,8 +16,7 @@ namespace BLL.Services
 		private readonly IConcertApiRepository _concertApi;
 
 		public ConcertService(MusicContext context,
-							  IConcertApiRepository concertApi,
-							  ILogger<ConcertService> logger) : base(context, logger)
+							  IConcertApiRepository concertApi) : base(context)
 		{
 			_concertApi = concertApi;
 		}
@@ -29,9 +28,7 @@ namespace BLL.Services
 				.Where(c => c.Id == id);
 			if (concerts.Count() < 1)
 			{
-
-				_logger.LogWarning($"Concert with id - {id} not found");
-				throw new Exception($"Concert with id - {id} not found");
+				throw new ArgumentNullException($"Concert with id - {id} not found");
 			}
 
 			return concerts
@@ -62,16 +59,9 @@ namespace BLL.Services
 				entity.Stats = newStats;
 			}
 
-			try
-			{
-				await _dbSet.AddAsync(entity);
-				await _context.SaveChangesAsync();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex,"Error adding data");
-				throw new Exception($"Error adding data");
-			}
+			await _dbSet.AddAsync(entity);
+			await _context.SaveChangesAsync();
+
 			
 		}
 

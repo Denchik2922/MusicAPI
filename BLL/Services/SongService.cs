@@ -10,7 +10,7 @@ namespace BLL.Services
 {
 	public class SongService : BaseGenericService<Song>, ISongService
 	{
-		public SongService(MusicContext context, ILogger<SongService> logger) : base(context, logger) { }
+		public SongService(MusicContext context, ILogger<SongService> logger) : base(context) { }
 
 		public Song GetByIdWithInclude(int id)
 		{
@@ -19,9 +19,7 @@ namespace BLL.Services
 				.Where(m => m.Id == id);
 			if (songs.Count() < 1)
 			{
-				string ErrorMsg = $"song with id - {id} not found";
-				_logger.LogWarning(ErrorMsg);
-				throw new Exception(ErrorMsg);
+				throw new ArgumentNullException($"song with id - {id} not found");
 			}
 
 			return songs

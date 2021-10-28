@@ -15,29 +15,17 @@ namespace BLL.Services
 	{
 		protected readonly MusicContext _context;
 		protected readonly DbSet<TEntity> _dbSet;
-		protected readonly ILogger<BaseGenericService<TEntity>> _logger;
 
-		public BaseGenericService(MusicContext context, ILogger<BaseGenericService<TEntity>> logger)
+		public BaseGenericService(MusicContext context)
 		{
 			_context = context;
 			_dbSet = context.Set<TEntity>();
-			_logger = logger;
 		}
 
 		public async virtual Task Add(TEntity entity)
 		{
-			try
-			{
-				await _dbSet.AddAsync(entity);
-				await _context.SaveChangesAsync();
-
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex,"Error adding data");
-				throw new Exception("Error adding data");
-			}
-			
+			await _dbSet.AddAsync(entity);
+			await _context.SaveChangesAsync();
 		}
 
 		public async virtual Task<IEnumerable<TEntity>> GetAll()
@@ -53,33 +41,15 @@ namespace BLL.Services
 
 		public async Task RemoveById(int id)
 		{
-			try
-			{
-				var entity = await GetById(id);
-				 _dbSet.Remove(entity);
-				await _context.SaveChangesAsync();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError(ex,"Error removing data");
-				throw new Exception($"Error removing data");
-			}
-
+			var entity = await GetById(id);
+			_dbSet.Remove(entity);
+			await _context.SaveChangesAsync();
 		}
 
 		public async Task Update(TEntity entity)
 		{
-			try
-			{
-				_context.Entry(entity).State = EntityState.Modified;
-				await _context.SaveChangesAsync();
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError($"Error updating data\nException {ex}");
-				throw new Exception($"Error updating data");
-			}
-			
+			_context.Entry(entity).State = EntityState.Modified;
+			await _context.SaveChangesAsync();
 		}
 	}
 }

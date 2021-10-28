@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using MusicAPI.Middleware;
 
 namespace MusicAPI
 {
@@ -95,11 +96,8 @@ namespace MusicAPI
 				app.UseSwagger();
 				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MusicAPI v1"));
 			}
-			else
-			{
-				app.UseExceptionHandler("/Error");
 
-			}
+			app.UseMiddleware<ExceptionMiddleware>(loggerFactory.CreateLogger(nameof(ExceptionMiddleware)));
 
 			app.UseHttpsRedirection();
 

@@ -11,7 +11,7 @@ namespace BLL.Services
 {
 	public class MusicAlbumService : BaseGenericService<MusicAlbum>, IMusicAlbumService
 	{
-		public MusicAlbumService(MusicContext context, ILogger<MusicAlbumService> logger) : base(context, logger) { }
+		public MusicAlbumService(MusicContext context) : base(context) { }
 
 		public MusicAlbum GetByIdWithInclude(int id)
 		{
@@ -19,9 +19,7 @@ namespace BLL.Services
 				.Where(m => m.Id == id);
 			if (musicAlbums.Count() < 1)
 			{
-				string ErrorMsg = $"Music Album with id - {id} not found";
-				_logger.LogWarning(ErrorMsg);
-				throw new Exception(ErrorMsg);
+				throw new ArgumentNullException($"Music Album with id - {id} not found");
 			}
 
 			return musicAlbums
@@ -32,73 +30,30 @@ namespace BLL.Services
 
 		public async Task AddSongToAlbum(int albumId, Song song)
 		{
-
 			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
-			try
-			{
-				musicAlbum.Songs.Add(song);
-				await _context.SaveChangesAsync();
-			}
-			catch (Exception ex)
-			{
-				string ErrorMsg = $"Error adding song - {song.Name} to album with id - {albumId}";
-				_logger.LogError(ex, ErrorMsg);
-				throw new Exception(ErrorMsg);
-			}
-
+			musicAlbum.Songs.Add(song);
+			await _context.SaveChangesAsync();
 		}
 
 		public async Task RemoveSongToAlbum(int albumId, int songId)
 		{
 			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
-			try
-			{
-				musicAlbum.Songs.RemoveAll(i => i.Id == songId);
-				await _context.SaveChangesAsync();
-			}
-			catch (Exception ex)
-			{
-				string ErrorMsg = $"Error removing songId - {songId} to album with id - {albumId}";
-				_logger.LogError(ex, ErrorMsg);
-				throw new Exception(ErrorMsg);
-			}
-			
+			musicAlbum.Songs.RemoveAll(i => i.Id == songId);
+			await _context.SaveChangesAsync();
 		}
 
 		public async Task AddGenreToAlbum(int albumId, Genre genre)
 		{
 			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
-
-			try
-			{
-				musicAlbum.Genres.Add(genre);
-				await _context.SaveChangesAsync();
-			}
-			catch (Exception ex)
-			{
-				string ErrorMsg = $"Error adding genre - {genre.Name} to album with id - {albumId}";
-				_logger.LogError(ex, ErrorMsg);
-				throw new Exception(ErrorMsg);
-			}
-			
+			musicAlbum.Genres.Add(genre);
+			await _context.SaveChangesAsync();
 		}
 
 		public async Task RemoveGenreToAlbum(int albumId, int genreId)
 		{
 			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
-
-			try
-			{
-				musicAlbum.Genres.RemoveAll(i => i.Id == genreId);
-				await _context.SaveChangesAsync();
-			}
-			catch (Exception ex)
-			{
-				string ErrorMsg = $"Error removing genreId - {genreId} to album with id - {albumId}";
-				_logger.LogError(ex, ErrorMsg);
-				throw new Exception(ErrorMsg);
-			}
-			
+			musicAlbum.Genres.RemoveAll(i => i.Id == genreId);
+			await _context.SaveChangesAsync();
 		}
 	}
 }
