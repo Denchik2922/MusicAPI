@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MusicAPI.Middleware;
 using Microsoft.AspNetCore.Identity;
+using Hangfire;
 
 namespace MusicAPI
 {
@@ -68,6 +69,13 @@ namespace MusicAPI
 				c.IncludeXmlComments(filePath);
 			});
 
+			//Configure Hangfire
+			services.AddHangfire(x =>
+			{
+				x.UseSqlServerStorage(Configuration.GetConnectionString("DbHangfire"));
+			});
+			services.AddHangfireServer();
+
 			//Add HttpClient
 			services.AddHttpClient<IConcertApiRepository, ConcertApiRepository>();
 
@@ -85,12 +93,17 @@ namespace MusicAPI
 			services.AddScoped<IStatisticService, StatisticService>();
 			services.AddScoped<IAuthService, AuthService>();
 			services.AddSingleton<IConcertApiRepository, ConcertApiRepository>();
+			services.AddTransient<IConcertJob, ConcertJob>();
 
 			//Add AutoMapper
 			services.AddAutoMapper(typeof(Startup));
 		}
 
-		public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
+		public void Configure(IApplicationBuilder app,
+							  IWebHostEnvironment env,
+							  ILoggerFactory loggerFactory,
+							  IRecurringJobManager recurringJobManager,
+							  IServiceProvider serviceProvider)
 		{
 			var path = Directory.GetCurrentDirectory();
 			loggerFactory.AddFile($"{path}\\Logs\\Log.txt");
@@ -116,6 +129,20 @@ namespace MusicAPI
 			{
 				endpoints.MapControllers();
 			});
+
+			//Add hangfire
+			app.UseHangfireDashboard();
+			recurringJobManager.AddOrUpdate(
+				"Add new concerts job",
+				() => serviceProvider.GetService<IConcertJob>().AddNewConcerts(),
+				" 0 12 * * *"
+				);
+
+			recurringJobManager.AddOrUpdate(
+				"Delete old concerts",
+				() => serviceProvider.GetService<IConcertJob>().DeleteOldConcerts(),
+				"59 23 * * *"
+				); ;
 		}
 	}
 }

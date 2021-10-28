@@ -30,7 +30,7 @@ namespace BLL.Services
 
 		public async virtual Task<IEnumerable<TEntity>> GetAll()
 		{
-			return await _dbSet.AsNoTracking().ToListAsync();
+			return await _dbSet.ToListAsync();
 		}
 
 		public async Task<TEntity> GetById(int id)

@@ -13,13 +13,7 @@ namespace BLL.Services
 {
 	public class ConcertService : BaseGenericService<Concert>, IConcertService
 	{
-		private readonly IConcertApiRepository _concertApi;
-
-		public ConcertService(MusicContext context,
-							  IConcertApiRepository concertApi) : base(context)
-		{
-			_concertApi = concertApi;
-		}
+		public ConcertService(MusicContext context) : base(context){}
 
 
 		public Concert GetByIdWithInclude(int id)
@@ -61,11 +55,15 @@ namespace BLL.Services
 
 			await _dbSet.AddAsync(entity);
 			await _context.SaveChangesAsync();
-
-			
 		}
 
-		private async Task AddRange(IEnumerable<Concert> concerts)
+		public async Task RemoveConcerts(IEnumerable<Concert> concerts)
+		{
+			_dbSet.RemoveRange(concerts);
+			await _context.SaveChangesAsync();
+		}
+
+		public async Task AddRange(IEnumerable<Concert> concerts)
 		{
 			var newConcerts = concerts.Where(c => _context.Concerts.
 															FirstOrDefault(con => con.Title.Contains(c.Title)) == default).
@@ -84,18 +82,8 @@ namespace BLL.Services
 				.AsNoTracking()
 				.ToListAsync();
 
-			if (concerts.Count <= 0 || concerts == null)
-			{
-				concerts = await _concertApi.GetAllConcerts();
-				if(concerts != null)
-				{
-					await AddRange(concerts);
-				}
-			}
-
 			return concerts;
 		}
-
 
 	}
 }

@@ -27,9 +27,6 @@ namespace DAL
 
 			modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
-			modelBuilder.Entity<User>()
-			.HasIndex(u => new { u.Username, u.Email }).IsUnique();
-
 			modelBuilder.Entity<Musician>()
 			.HasMany(m => m.MusicInstruments)
 			.WithMany(i => i.Musicians);
