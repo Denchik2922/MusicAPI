@@ -1,4 +1,4 @@
-﻿using BLL.ModelsService;
+﻿using ModelsDto;
 using System;
 using System.Collections.Generic;
 
@@ -6,8 +6,8 @@ namespace BLL.Interfaces
 {
 	public interface IStatisticService
 	{
-		IEnumerable<PopularInstruments> GetFivePopularInstruments();
+		IEnumerable<PopularInstrumentsDto> GetFivePopularInstruments();
 		double GetAverageCostConcertPerMonth(int month);
-		IEnumerable<CountryWithMusicians> GetCountriesWithMostMusicians();
+		IEnumerable<CountryWithMusiciansDto> GetCountriesWithMostMusicians();
 	}
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Models;
-using MusicAPI.ModelsDto;
+using ModelsDto;
 
 namespace MusicAPI.infrastructure
 {

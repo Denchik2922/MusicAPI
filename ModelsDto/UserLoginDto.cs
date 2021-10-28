@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MusicAPI.ModelsDto
+namespace ModelsDto
 {
 	public class UserLoginDto
 	{

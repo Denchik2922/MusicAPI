@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MusicAPI.ModelsDto
+namespace ModelsDto
 {
 	public class GroupDto
 	{

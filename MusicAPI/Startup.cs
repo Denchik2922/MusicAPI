@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.IO;
-using MusicAPI.Infrastructure;
 using System;
 using Microsoft.Extensions.Logging;
 using System.Text;
@@ -105,12 +104,6 @@ namespace MusicAPI
 			app.UseHttpsRedirection();
 
 			app.UseRouting();
-
-			// global cors policy
-			app.UseCors(x => x
-				.AllowAnyOrigin()
-				.AllowAnyMethod()
-				.AllowAnyHeader());
 
 			app.UseAuthentication();
 

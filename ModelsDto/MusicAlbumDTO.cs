@@ -1,10 +1,10 @@
-﻿using MusicAPI.Infrastructure;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
+using System.Text.Json.Serialization;
 
-namespace MusicAPI.ModelsDto
+namespace ModelsDto
 {
 	public class MusicAlbumDto
 	{
@@ -12,7 +12,7 @@ namespace MusicAPI.ModelsDto
 		public string Name { get; set; }
 		public DateTime Released { get; set; }
 
-		[JsonConverter(typeof(TimeSpanConverter))]
+		[JsonConverter(typeof(JsonTimeSpanConverter))]
 		public TimeSpan Length { get; set; }
 		public List<SongDto> Songs { get; set; }
 		public int GroupId { get; set; }

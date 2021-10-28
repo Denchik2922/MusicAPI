@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BLL.ModelsService
+namespace ModelsDto
 {
-	public class MusicianCountry
+	public class MusicianCountryDto
 	{
 		public string Instrument { get; set; }
 		public int Count { get; set; }

@@ -3,7 +3,7 @@ using BLL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MusicAPI.ModelsDto;
+using ModelsDto;
 using Models;
 using System;
 using System.Collections.Generic;

@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BLL.ModelsService;
 using Microsoft.Extensions.Logging;
+using ModelsDto;
 
 namespace BLL.Services
 {
@@ -20,7 +20,7 @@ namespace BLL.Services
 			_logger = logger;
 		}
 
-		public IEnumerable<PopularInstruments> GetFivePopularInstruments()
+		public IEnumerable<PopularInstrumentsDto> GetFivePopularInstruments()
 		{
 			var instrumens = _context.MusicInstruments.
 				Include(i => i.Musicians).
@@ -28,7 +28,7 @@ namespace BLL.Services
 				Where(i => i.Musicians.Count > 0).
 				OrderByDescending(i => i.Musicians.Count).
 				Take(5).
-				Select(i => new PopularInstruments { Name = i.Name, MusiciansUsed = i.Musicians.Count });
+				Select(i => new PopularInstrumentsDto { Name = i.Name, MusiciansUsed = i.Musicians.Count });
 
 			return instrumens;
 		}
@@ -56,18 +56,18 @@ namespace BLL.Services
 			
 		}
 
-		public IEnumerable<CountryWithMusicians> GetCountriesWithMostMusicians()
+		public IEnumerable<CountryWithMusiciansDto> GetCountriesWithMostMusicians()
 		{
 			var countries = _context.Musicians.
 				Include(m => m.MusicInstruments).
 				AsNoTracking().
 				ToList().
 				GroupBy(m => m.Country).
-				Select(g => new CountryWithMusicians
+				Select(g => new CountryWithMusiciansDto
 				{
 					Country = g.Key,
 					Musician = g.GroupBy(i => i.MusicInstruments.Select(i => i.Name).First().ToString()).
-							Select(g => new MusicianCountry { Instrument = g.Key, Count = g.Count() }).
+							Select(g => new MusicianCountryDto { Instrument = g.Key, Count = g.Count() }).
 							OrderByDescending(i => i.Count)
 				});
 			return countries;
