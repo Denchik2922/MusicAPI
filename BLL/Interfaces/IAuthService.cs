@@ -1,12 +1,14 @@
-﻿using Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
-	public interface IAuthService : IGenericService<User>
+	public interface IAuthService
 	{
-		string Authenticate(string username, string password);
-		User GetByIdWithInclude(int id);
-		Task Register(User user);
+		Task<string> Authenticate(string username, string password);
+		Task<IEnumerable<IdentityUser>> GetAll();
+		Task Register(IdentityUser user, string password);
 	}
 }

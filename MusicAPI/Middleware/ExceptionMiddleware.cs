@@ -56,7 +56,7 @@ namespace MusicAPI.Middleware
             {
                 ArgumentNullException => exception.Message,
                 DbUpdateException => "Update database error",
-                _ => "Internal Server Error"
+                _ => exception.Message
             };
             
             await context.Response.WriteAsync(new ErrorDetails()

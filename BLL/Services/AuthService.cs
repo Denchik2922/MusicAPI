@@ -1,10 +1,10 @@
 ﻿using BLL.Interfaces;
 using DAL;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Models;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,71 +15,66 @@ using System.Threading.Tasks;
 
 namespace BLL.Services
 {
-	public class AuthService : BaseGenericService<User>, IAuthService
+	public class AuthService : IAuthService
 	{
 		private readonly string _secret;
-		public AuthService(MusicContext context, IConfiguration config) : base(context)
+		private readonly UserManager<IdentityUser> _userManager;
+
+		public AuthService(UserManager<IdentityUser> userManager, IConfiguration config)
 		{
 			_secret = config.GetSection("JwtSettings")["Secret"];
+			_userManager = userManager;
 		}
 
-		public override async Task<IEnumerable<User>> GetAll()
+		public async Task<IEnumerable<IdentityUser>> GetAll()
 		{
-			return await _context.Users
-				.Include(u => u.Role)
-				.AsNoTracking()
-				.ToListAsync();
+			return await _userManager.Users.ToListAsync();
 		}
 
-		public User GetByIdWithInclude(int id)
+		public async Task Register(IdentityUser user, string password)
 		{
-			var user = _context.Users.Include(u => u.Role)
-						.AsNoTracking()
-						.FirstOrDefault(x => x.Id == id);
-			return user;
-		}
-
-		public async Task Register(User user)
-		{
-			user.Role = _context.Roles.
-						Where(r => r.Name == "User").
-						FirstOrDefault();
-			if (user.Role == null)
+			var result = await _userManager.CreateAsync(user, password);
+			if (!result.Succeeded)
 			{
-				user.Role = new Role { Name = "User" };
+				foreach (var error in result.Errors)
+				{
+					throw new Exception($"Code: {error.Code}, Description: { error.Description}");
+				}
 			}
-			await Add(user);
+			await _userManager.AddToRoleAsync(user, "User");
 		}
 
-		public string Authenticate(string username, string password)
-		{
-			var user = _context.Users
-						.Include(u => u.Role)
-						.AsNoTracking()
-						.SingleOrDefault(x => x.Username == username && x.Password == password);
-
-			if (user == null)
+		public async Task<string> Authenticate(string username, string password)
+		{	
+			var user = await _userManager.FindByNameAsync(username);
+			if (user != null &&
+				await _userManager.CheckPasswordAsync(user, password))
 			{
-				throw new ArgumentNullException($"User with username - {username} not found");
+				IList<string> roles = await _userManager.GetRolesAsync(user);
+				string token = GenerateJwtToken(user, roles);
+
+				return token;
 			}
-
-			string token = GenerateJwtToken(user);
-
-			return token;
+			else
+			{
+				throw new Exception("Authenticate error");
+			}
+			
 		}
 
-		private string GenerateJwtToken(User user)
+		private string GenerateJwtToken(IdentityUser user, IList<string> roles)
 		{
 			var tokenHandler = new JwtSecurityTokenHandler();
+
 			var key = Encoding.ASCII.GetBytes(_secret);
+
+			List<Claim> claims = roles.Select(r => new Claim(ClaimTypes.Role, r)).ToList();
+			claims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
+
 			var tokenDescriptor = new SecurityTokenDescriptor
 			{
-				Subject = new ClaimsIdentity(new Claim[]
-				{
-					new Claim(ClaimTypes.Name, user.Id.ToString()),
-					new Claim(ClaimTypes.Role, user.Role.Name)
-				}),
-				Expires = DateTime.UtcNow.AddHours(2),
+				Subject = new ClaimsIdentity(claims),
+				Expires = DateTime.UtcNow.AddMinutes(20),
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
 			};
 			var token = tokenHandler.CreateToken(tokenDescriptor);

@@ -3,6 +3,7 @@ using BLL.Interfaces;
 using BLL.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using ModelsDto;
@@ -28,12 +29,10 @@ namespace MusicAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Authenticate([FromBody] UserLoginDto model)
+        public async Task<IActionResult> Authenticate([FromBody] UserLoginDto model)
         {
-            var user = _authService.Authenticate(model.Username, model.Password);
 
-            if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
+            var user = await _authService.Authenticate(model.Username, model.Password);
 
             return Ok(user);
         }
@@ -46,9 +45,9 @@ namespace MusicAPI.Controllers
             {
                 return ValidationProblem();
             }
-            var user = _mapper.Map<User>(userModel);
+            var user = _mapper.Map<IdentityUser>(userModel);
 
-            await _authService.Register(user);
+            await _authService.Register(user, userModel.Password);
 
             return Ok();
         }

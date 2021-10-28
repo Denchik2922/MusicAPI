@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
 namespace DAL
 {
-	public sealed class MusicContext : DbContext
+	public sealed class MusicContext : IdentityDbContext
 	{
 		public MusicContext(DbContextOptions<MusicContext> options): base(options) { }
 
@@ -19,11 +20,13 @@ namespace DAL
 		public DbSet<Concert> Concerts { get; set; }
 		public DbSet<Stat> Stats { get; set; }
 		public DbSet<Venue> Venues { get; set; }
-		public DbSet<User> Users { get; set; }
-		public DbSet<Role> Roles { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			base.OnModelCreating(modelBuilder);
+
+			modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
 			modelBuilder.Entity<User>()
 			.HasIndex(u => new { u.Username, u.Email }).IsUnique();
 

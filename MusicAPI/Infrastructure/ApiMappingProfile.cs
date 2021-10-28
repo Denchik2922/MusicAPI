@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Models;
 using ModelsDto;
 
@@ -30,11 +31,10 @@ namespace MusicAPI.infrastructure
 
 			CreateMap<Venue, VenueDto>().ReverseMap();
 
-			CreateMap<User, UserDto>().ReverseMap();
+			CreateMap<IdentityUser, UserDto>().ReverseMap();
 
-			CreateMap<User, UserRegisterDto>().ReverseMap();
+			CreateMap<IdentityUser, UserRegisterDto>().ReverseMap();
 
-			CreateMap<Role, RoleDto>().ReverseMap();
 		}
 	}
 }

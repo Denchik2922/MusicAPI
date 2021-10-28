@@ -15,6 +15,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using MusicAPI.Middleware;
+using Microsoft.AspNetCore.Identity;
 
 namespace MusicAPI
 {
@@ -32,6 +33,10 @@ namespace MusicAPI
 			services.AddControllers().AddNewtonsoftJson(options =>
 			options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
+			//Configure Identity
+			services.AddIdentity<IdentityUser, IdentityRole>()
+				.AddEntityFrameworkStores<MusicContext>();
+
 			//Configure jwt authentication
 			var secret = Configuration.GetSection("JwtSettings")["Secret"];
 
@@ -41,18 +46,18 @@ namespace MusicAPI
 				x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 				x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 			})
-			.AddJwtBearer(x =>
-			{
-				x.RequireHttpsMetadata = false;
-				x.SaveToken = true;
-				x.TokenValidationParameters = new TokenValidationParameters
-				{
-					ValidateIssuerSigningKey = true,
-					IssuerSigningKey = new SymmetricSecurityKey(key),
-					ValidateIssuer = false,
-					ValidateAudience = false
-				};
-			});
+		   .AddJwtBearer(x =>
+		   {
+			   x.RequireHttpsMetadata = false;
+			   x.SaveToken = true;
+			   x.TokenValidationParameters = new TokenValidationParameters
+			   {
+				   ValidateIssuerSigningKey = true,
+				   IssuerSigningKey = new SymmetricSecurityKey(key),
+				   ValidateIssuer = false,
+				   ValidateAudience = false
+			   };
+		   });
 
 			//Swagger
 			services.AddSwaggerGen(c =>
