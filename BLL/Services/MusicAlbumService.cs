@@ -11,7 +11,12 @@ namespace BLL.Services
 {
 	public class MusicAlbumService : BaseGenericService<MusicAlbum>, IMusicAlbumService
 	{
-		public MusicAlbumService(MusicContext context) : base(context) { }
+		private IDbHelperService _dbHelper;
+
+		public MusicAlbumService(MusicContext context, IDbHelperService dbHelper) : base(context) {
+			_dbHelper = dbHelper;
+
+		}
 
 		public MusicAlbum GetByIdWithInclude(int id)
 		{
@@ -28,32 +33,42 @@ namespace BLL.Services
 				.FirstOrDefault();
 		}
 
-		public async Task AddSongToAlbum(int albumId, Song song)
+		public async override Task Add(MusicAlbum entity)
 		{
-			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
-			musicAlbum.Songs.Add(song);
+			_context.Genres.AttachRange(entity.Genres);
+			_context.Songs.AttachRange(entity.Songs);
+
+			await _context.MusicAlbums.AddAsync(entity);
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task RemoveSongToAlbum(int albumId, int songId)
+		public override async Task Update(MusicAlbum entity)
 		{
-			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
-			musicAlbum.Songs.RemoveAll(i => i.Id == songId);
+			MusicAlbum album = GetByIdWithInclude(entity.Id);
+			album.Name = entity.Name;
+			album.Released = entity.Released;
+			album.Length = entity.Length;
+
+			album.GroupId = entity.GroupId;
+
+			var songs = _context.Songs.ToList()
+										.Where(i => entity.Songs
+														  .Exists(el => el.Id == i.Id)).ToList();
+
+			_dbHelper.AddItemsToRelationLists(album.Songs, songs);
+			_dbHelper.RemoveItemsFromRelationLists(album.Songs, entity.Songs);
+
+
+			var genres = _context.Genres.ToList()
+										.Where(g => entity.Genres
+														  .Exists(el => el.Id == g.Id)).ToList();
+
+			_dbHelper.AddItemsToRelationLists(album.Genres, genres);
+			_dbHelper.RemoveItemsFromRelationLists(album.Genres, entity.Genres);
+
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task AddGenreToAlbum(int albumId, Genre genre)
-		{
-			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
-			musicAlbum.Genres.Add(genre);
-			await _context.SaveChangesAsync();
-		}
 
-		public async Task RemoveGenreToAlbum(int albumId, int genreId)
-		{
-			MusicAlbum musicAlbum = GetByIdWithInclude(albumId);
-			musicAlbum.Genres.RemoveAll(i => i.Id == genreId);
-			await _context.SaveChangesAsync();
-		}
 	}
 }

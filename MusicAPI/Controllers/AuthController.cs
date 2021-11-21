@@ -34,7 +34,7 @@ namespace MusicAPI.Controllers
 
             var user = await _authService.Authenticate(model.Username, model.Password);
 
-            return Ok(user);
+            return Ok(new {access_token = user});
         }
 
         [AllowAnonymous]

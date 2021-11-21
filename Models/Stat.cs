@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Models
 {
-	public class Stat
+	public class Stat : IEntity
 	{
 		public int Id { get; set; }
 		public string Listing_Count { get; set; }

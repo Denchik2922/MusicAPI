@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Models
 {
-	public class Musician
+	public class Musician : IEntity
 	{
 		public int Id { get; set; }
 		public string FirstName { get; set; }

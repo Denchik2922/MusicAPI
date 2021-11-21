@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
-	public class Song
+	public class Song : IEntity
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }

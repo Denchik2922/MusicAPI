@@ -65,7 +65,7 @@ namespace MusicAPI.Controllers
 		{
 			Genre genre = _mapper.Map<Genre>(genreDto);
 			await _genreService.Add(genre);
-			return Ok("Genre added");
+			return Ok();
 		}
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace MusicAPI.Controllers
 		public async Task<IActionResult> RemoveGenre(int id)
 		{
 			await _genreService.RemoveById(id);
-			return Ok("Genre removed");
+			return Ok();
 		}
 
 		/// <summary>
@@ -88,7 +88,7 @@ namespace MusicAPI.Controllers
 		{
 			Genre genre = _mapper.Map<Genre>(genreDto);
 			await _genreService.Update(genre);
-			return Ok("Genre updated");
+			return Ok();
 		}
 	}
 }

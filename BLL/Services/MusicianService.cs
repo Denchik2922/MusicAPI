@@ -1,9 +1,11 @@
-﻿using BLL.Interfaces;
+﻿using AutoMapper;
+using BLL.Interfaces;
 using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -14,7 +16,11 @@ namespace BLL.Services
 {
 	public class MusicianService : BaseGenericService<Musician>, IMusicianService
 	{
-		public MusicianService(MusicContext context) : base(context) { }
+
+		private IDbHelperService _dbHelper;
+		public MusicianService(MusicContext context, IDbHelperService dbHelper) : base(context) {
+			_dbHelper = dbHelper;
+		}
 		
 		public Musician GetByIdWithInclude(int id)
 		{
@@ -31,34 +37,41 @@ namespace BLL.Services
 							.FirstOrDefault();
 		}
 
-		public async Task AddInstrumentToMusician(int musicianId, MusicInstrument instrument)
+		public async override Task Add(Musician entity)
 		{
-			Musician musician = GetByIdWithInclude(musicianId);
-			musician.MusicInstruments.Add(instrument);
+			_context.Genres.AttachRange(entity.Genres);
+			_context.MusicInstruments.AttachRange(entity.MusicInstruments);
+			await _context.Musicians.AddAsync(entity);
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task RemoveInstrumentToMusician(int musicianId, int instrumentId)
+		public override async Task Update(Musician entity)
 		{
-			Musician musician = GetByIdWithInclude(musicianId);
-			musician.MusicInstruments.RemoveAll(i => i.Id == instrumentId);
+			Musician musician = GetByIdWithInclude(entity.Id);
+			musician.FirstName = entity.FirstName;
+			musician.LastName = entity.LastName;
+			musician.Country = entity.Country;
+
+			var instruments = _context.MusicInstruments.ToList()
+										.Where(i => entity.MusicInstruments
+														  .Exists(el => el.Id == i.Id)).ToList();
+
+			_dbHelper.AddItemsToRelationLists(musician.MusicInstruments, instruments);
+			_dbHelper.RemoveItemsFromRelationLists(musician.MusicInstruments, entity.MusicInstruments);
+
+
+			var genres = _context.Genres.ToList()
+										.Where(g => entity.Genres
+													      .Exists(el => el.Id == g.Id)).ToList();
+
+			_dbHelper.AddItemsToRelationLists(musician.Genres, genres);
+			_dbHelper.RemoveItemsFromRelationLists(musician.Genres, entity.Genres);
+
+
+			musician.GroupId = entity.GroupId;
+
 			await _context.SaveChangesAsync();
-	
-			
 		}
 
-		public async Task AddGenreToMusician(int musicianId, Genre genre)
-		{
-			Musician musician = GetByIdWithInclude(musicianId);
-			musician.Genres.Add(genre);
-			await _context.SaveChangesAsync();
-		}
-
-		public async Task RemoveGenreToMusician(int musicianId, int genreId)
-		{
-			Musician musician = GetByIdWithInclude(musicianId);
-			musician.Genres.RemoveAll(i => i.Id == genreId);
-			await _context.SaveChangesAsync();
-		}
 	}
 }

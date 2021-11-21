@@ -46,7 +46,7 @@ namespace BLL.Services
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task Update(TEntity entity)
+		public async virtual Task Update(TEntity entity)
 		{
 			_context.Entry(entity).State = EntityState.Modified;
 			await _context.SaveChangesAsync();

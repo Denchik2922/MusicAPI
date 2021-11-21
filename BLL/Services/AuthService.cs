@@ -69,7 +69,7 @@ namespace BLL.Services
 			var key = Encoding.ASCII.GetBytes(_secret);
 
 			List<Claim> claims = roles.Select(r => new Claim(ClaimTypes.Role, r)).ToList();
-			claims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
+			claims.Add(new Claim(ClaimTypes.Name, user.UserName));
 
 			var tokenDescriptor = new SecurityTokenDescriptor
 			{

@@ -64,7 +64,7 @@ namespace MusicAPI.Controllers
 		{
 			MusicInstrument instrument = _mapper.Map<MusicInstrument>(instrumentDto);
 			await _instrumentService.Add(instrument);
-			return Ok("Instrument added");
+			return Ok();
 		}
 
 		/// <summary>
@@ -76,7 +76,7 @@ namespace MusicAPI.Controllers
 		{
 
 			await _instrumentService.RemoveById(id);
-			return Ok("Instrument removed");
+			return Ok();
 		}
 
 		/// <summary>
@@ -88,7 +88,7 @@ namespace MusicAPI.Controllers
 		{
 			MusicInstrument instrument = _mapper.Map<MusicInstrument>(instrumentDto);
 			await _instrumentService.Update(instrument);
-			return Ok("Instrument updated");
+			return Ok();
 		}
 	}
 }

@@ -94,9 +94,12 @@ namespace MusicAPI
 			services.AddScoped<IAuthService, AuthService>();
 			services.AddSingleton<IConcertApiRepository, ConcertApiRepository>();
 			services.AddTransient<IConcertJob, ConcertJob>();
+			services.AddScoped<IDbHelperService, DbHelperService>();
 
 			//Add AutoMapper
 			services.AddAutoMapper(typeof(Startup));
+
+			services.AddCors();
 		}
 
 		public void Configure(IApplicationBuilder app,
@@ -124,6 +127,10 @@ namespace MusicAPI
 			app.UseAuthentication();
 
 			app.UseAuthorization();
+
+			app.UseCors(builder => builder.WithOrigins("http://localhost:4200")
+							.AllowAnyMethod()
+							.AllowAnyHeader());
 
 			app.UseEndpoints(endpoints =>
 			{

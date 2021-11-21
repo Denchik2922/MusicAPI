@@ -64,7 +64,7 @@ namespace MusicAPI.Controllers
 		{
 			Song song = _mapper.Map<Song>(songDto);
 			await _songService.Add(song);
-			return Ok("Song added");
+			return Ok();
 		}
 
 		/// <summary>
@@ -75,7 +75,7 @@ namespace MusicAPI.Controllers
 		public async Task<IActionResult> RemoveSong(int id)
 		{
 			await _songService.RemoveById(id);
-			return Ok("Song removed");
+			return Ok();
 		}
 
 		/// <summary>
@@ -87,7 +87,7 @@ namespace MusicAPI.Controllers
 		{
 			Song song = _mapper.Map<Song>(songDto);
 			await _songService.Update(song);
-			return Ok("Song updated");
+			return Ok();
 		}
 	}
 }
