@@ -1,12 +1,8 @@
 ﻿using AutoMapper;
 using BLL.Interfaces;
-using BLL.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ModelsDto;
-using System;
+using ModelsDto.ConcertApiDto;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MusicAPI.Controllers
@@ -38,9 +34,9 @@ namespace MusicAPI.Controllers
 		}
 
 		[HttpGet("{id}")]
-		public IActionResult GetAllConcerts(int id)
+		public async Task<IActionResult> GetAllConcerts(int id)
 		{
-			var concert = _concertApi.GetByIdWithInclude(id);
+			var concert = await _concertApi.GetByIdWithInclude(id);
 			if (concert == null)
 			{
 				return NotFound();

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DAL.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.ConcertAPI;
 
 namespace DAL
 {
@@ -21,31 +23,23 @@ namespace DAL
 		public DbSet<Stat> Stats { get; set; }
 		public DbSet<Venue> Venues { get; set; }
 
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
 
 			modelBuilder.ApplyConfiguration(new RoleConfiguration());
-
-			modelBuilder.Entity<Musician>()
-			.HasMany(m => m.MusicInstruments)
-			.WithMany(i => i.Musicians);
-
-			modelBuilder.Entity<Musician>()
-			.HasMany(m => m.Genres)
-			.WithMany(g => g.Musicians);
-
-			modelBuilder.Entity<Group>()
-			.HasMany(m => m.Genres)
-			.WithMany(g => g.Groups);
-
-			modelBuilder.Entity<MusicAlbum>()
-			.HasMany(m => m.Genres)
-			.WithMany(g => g.MusicAlbums);
-
-			modelBuilder.Entity<Song>()
-			.HasMany(m => m.Genres)
-			.WithMany(g => g.Songs);
+			modelBuilder.ApplyConfiguration(new GenreConfiguration());
+			modelBuilder.ApplyConfiguration(new GenreGroupConfiguration());
+			modelBuilder.ApplyConfiguration(new GenreMusicAlbumConfiguration());
+			modelBuilder.ApplyConfiguration(new GenreMusicianConfiguration());
+			modelBuilder.ApplyConfiguration(new GenreSongConfiguration());
+			modelBuilder.ApplyConfiguration(new GroupConfiguration());
+			modelBuilder.ApplyConfiguration(new InstrumentConfiguration());
+			modelBuilder.ApplyConfiguration(new MusicAlbumConfiguration());
+			modelBuilder.ApplyConfiguration(new MusicianConfiguration());
+			modelBuilder.ApplyConfiguration(new MusicianInstrumentConfiguration());
+			modelBuilder.ApplyConfiguration(new SongConfiguration());
 		}
 	}
 }

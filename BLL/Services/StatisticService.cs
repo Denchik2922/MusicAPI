@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using ModelsDto;
+using ModelsDto.StatisticDto;
 
 namespace BLL.Services
 {
@@ -23,8 +23,10 @@ namespace BLL.Services
 		public IEnumerable<PopularInstrumentsDto> GetFivePopularInstruments()
 		{
 			var instrumens = _context.MusicInstruments.
-				Include(i => i.Musicians).
-				AsNoTracking().
+				Include(i => i.MusicInstrumentMusicians).
+				ThenInclude(mi => mi.Musician).
+				ToList().
+				Select(i => new { Name = i.Name, Musicians = i.MusicInstrumentMusicians.Select(m => m.Musician).ToList()}).
 				Where(i => i.Musicians.Count > 0).
 				OrderByDescending(i => i.Musicians.Count).
 				Take(5).
@@ -33,13 +35,11 @@ namespace BLL.Services
 			return instrumens;
 		}
 
-		public double GetAverageCostConcertPerMonth(int mouth)
+		public double GetAverageCostConcert()
 		{
 			var avarage = _context.Concerts.
 				Include(c => c.Stats).
-				AsNoTracking().
 				ToList().
-				Where(c => c.Datetime_Local.Month == mouth).
 				Average(c => ParseAveragePrice(c.Stats.Average_Price.Trim()));
 
 			return avarage;
@@ -58,19 +58,34 @@ namespace BLL.Services
 
 		public IEnumerable<CountryWithMusiciansDto> GetCountriesWithMostMusicians()
 		{
-			var countries = _context.Musicians.
-				Include(m => m.MusicInstruments).
-				AsNoTracking().
+			try
+			{
+				var countries = _context.Musicians.
+				Include(m => m.MusicInstrumentMusicians).
+				ThenInclude(i => i.MusicInstrument).
 				ToList().
+				Select(m => new { Country = m.Country, MusicInstruments = m.MusicInstrumentMusicians.Select(i => i.MusicInstrument).ToList()}).
 				GroupBy(m => m.Country).
 				Select(g => new CountryWithMusiciansDto
 				{
 					Country = g.Key,
-					Musician = g.GroupBy(i => i.MusicInstruments.Select(i => i.Name).First().ToString()).
+					Musician = g.GroupBy(i => i.MusicInstruments.Select(i => i.Name).FirstOrDefault()).
 							Select(g => new MusicianCountryDto { Instrument = g.Key, Count = g.Count() }).
 							OrderByDescending(i => i.Count)
 				});
-			return countries;
+				return countries;
+			}
+			catch (ArgumentNullException ex)
+			{
+				_logger.LogError(ex.Message);
+				throw;
+			}
+			catch (Exception ex)
+			{
+				_logger.LogError(ex.Message);
+				throw;
+			}
+			
 		}
 
 	}

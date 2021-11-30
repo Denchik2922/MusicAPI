@@ -3,9 +3,8 @@ using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using ModelsDto;
+using ModelsDto.MusicDto;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MusicAPI.Controllers
@@ -44,14 +43,14 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		/// <returns>Music Album</returns>
 		[HttpGet("{id}")]
-		public IActionResult GetMusicAlbumById(int id)
+		public async Task<IActionResult> GetMusicAlbumById(int id)
 		{
-			var musicAlbum = _albumService.GetByIdWithInclude(id);
+			var musicAlbum = await _albumService.GetByIdWithInclude(id);
 			if (musicAlbum == null)
 			{
 				return NotFound();
 			}
-			MusicAlbumDto musicAlbumDto = _mapper.Map<MusicAlbumDto>(musicAlbum);
+			AlbumDetailsDto musicAlbumDto = _mapper.Map<AlbumDetailsDto>(musicAlbum);
 			return Ok(musicAlbumDto);
 		}
 
@@ -60,7 +59,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> AddMusicAlbum(MusicAlbumDto musicAlbumDto)
+		public async Task<IActionResult> AddMusicAlbum(AlbumDetailsDto musicAlbumDto)
 		{
 			MusicAlbum musicAlbum = _mapper.Map<MusicAlbum>(musicAlbumDto);
 			await _albumService.Add(musicAlbum);
@@ -83,7 +82,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPut]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> UpdateMusicAlbum(MusicAlbumDto musicAlbumDto)
+		public async Task<IActionResult> UpdateMusicAlbum(AlbumDetailsDto musicAlbumDto)
 		{
 			MusicAlbum musicAlbum = _mapper.Map<MusicAlbum>(musicAlbumDto);
 			await _albumService.Update(musicAlbum);

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
-	public class Song : IEntity
+	public class Song
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
@@ -13,6 +13,6 @@ namespace Models
 		public TimeSpan Length { get; set; }
 		public int MusicAlbumId { get; set; }
 		public MusicAlbum MusicAlbum { get; set; }
-		public List<Genre> Genres { get; set; } = new List<Genre>();
+		public ICollection<GenreSong> GenreSongs { get; set; } = new List<GenreSong>();
 	}
 }

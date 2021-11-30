@@ -5,6 +5,6 @@ namespace BLL.Interfaces
 {
 	public interface IMusicAlbumService : IGenericService<MusicAlbum>
 	{
-		MusicAlbum GetByIdWithInclude(int id);
+		Task<MusicAlbum> GetByIdWithInclude(int id);
 	}
 }

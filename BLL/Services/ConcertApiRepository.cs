@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Models;
+using Models.ConcertAPI;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;

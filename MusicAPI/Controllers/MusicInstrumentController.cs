@@ -3,7 +3,7 @@ using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using ModelsDto;
+using ModelsDto.MusicDto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

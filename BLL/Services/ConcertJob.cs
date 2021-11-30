@@ -6,6 +6,7 @@ using Models;
 using System.Collections.Generic;
 using BLL.Interfaces;
 using System.Threading.Tasks;
+using Models.ConcertAPI;
 
 namespace BLL.Services
 {

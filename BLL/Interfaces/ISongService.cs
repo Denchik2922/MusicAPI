@@ -1,9 +1,10 @@
 ﻿using Models;
+using System.Threading.Tasks;
 
 namespace BLL.Interfaces
 {
 	public interface ISongService : IGenericService<Song>
 	{
-		Song GetByIdWithInclude(int id);
+		Task<Song> GetByIdWithInclude(int id);
 	}
 }

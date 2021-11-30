@@ -6,14 +6,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Models
 {
-	public class Group : IEntity
+	public class Group
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public string Country { get; set; }
-		public List<Musician> Members { get; set; } = new List<Musician>();
-		public List<MusicAlbum> MusicAlbums { get; set; } = new List<MusicAlbum>();
-		public List<Genre> Genres { get; set; } = new List<Genre>();
+		public ICollection<Musician> Members { get; set; } = new List<Musician>();
+		public ICollection<MusicAlbum> MusicAlbums { get; set; } = new List<MusicAlbum>();
+		public ICollection<GenreGroup> GenreGroups { get; set; } = new List<GenreGroup>();
 
 	}
 }

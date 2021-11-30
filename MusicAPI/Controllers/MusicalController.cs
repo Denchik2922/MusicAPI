@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using ModelsDto;
+using ModelsDto.MusicDto;
 using Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -43,14 +43,14 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		/// <returns>Musician</returns>
 		[HttpGet("{id}")]
-		public IActionResult GetMusicianById(int id)
+		public async Task<IActionResult> GetMusicianById(int id)
 		{
-			var musician = _musicianService.GetByIdWithInclude(id);
+			var musician = await _musicianService.GetByIdWithInclude(id);
 			if (musician == null)
 			{
 				return NotFound();
 			}
-			MusicianDto musicianDto = _mapper.Map<MusicianDto>(musician);
+			MusicianDetailsDto musicianDto = _mapper.Map<MusicianDetailsDto>(musician);
 			return Ok(musicianDto);
 
 		}
@@ -60,7 +60,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> AddMusican(MusicianDto musicianDto)
+		public async Task<IActionResult> AddMusican(MusicianDetailsDto musicianDto)
 		{
 			Musician musician = _mapper.Map<Musician>(musicianDto);
 			await _musicianService.Add(musician);
@@ -71,8 +71,12 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPut]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> UpdateMusician(MusicianDto musicianDto)
+		public async Task<IActionResult> UpdateMusician(MusicianDetailsDto musicianDto)
 		{
+			if (musicianDto.Id == 0)
+			{
+				return BadRequest();
+			}
 			Musician musician = _mapper.Map<Musician>(musicianDto);
 			await _musicianService.Update(musician);
 			return Ok();

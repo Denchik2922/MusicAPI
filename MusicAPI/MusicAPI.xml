@@ -16,7 +16,7 @@
             </summary>
             <returns>Group</returns>
         </member>
-        <member name="M:MusicAPI.Controllers.GenreController.AddGenre(ModelsDto.GenreDto)">
+        <member name="M:MusicAPI.Controllers.GenreController.AddGenre(ModelsDto.MusicDto.GenreDto)">
             <summary>
             Add genre
             </summary>
@@ -26,7 +26,7 @@
             Remove genre
             </summary>
         </member>
-        <member name="M:MusicAPI.Controllers.GenreController.UpdateGenre(ModelsDto.GenreDto)">
+        <member name="M:MusicAPI.Controllers.GenreController.UpdateGenre(ModelsDto.MusicDto.GenreDto)">
             <summary>
             Update genre
             </summary>
@@ -43,7 +43,7 @@
             </summary>
             <returns>Group</returns>
         </member>
-        <member name="M:MusicAPI.Controllers.GroupController.AddGroup(ModelsDto.GroupDto)">
+        <member name="M:MusicAPI.Controllers.GroupController.AddGroup(ModelsDto.MusicDto.GroupDetailsDto)">
             <summary>
             Add group
             </summary>
@@ -53,7 +53,7 @@
             Remove group
             </summary>
         </member>
-        <member name="M:MusicAPI.Controllers.GroupController.UpdateGroup(ModelsDto.GroupDto)">
+        <member name="M:MusicAPI.Controllers.GroupController.UpdateGroup(ModelsDto.MusicDto.GroupDetailsDto)">
             <summary>
             Update group
             </summary>
@@ -70,7 +70,7 @@
             </summary>
             <returns>Music Album</returns>
         </member>
-        <member name="M:MusicAPI.Controllers.MusicAlbumController.AddMusicAlbum(ModelsDto.MusicAlbumDto)">
+        <member name="M:MusicAPI.Controllers.MusicAlbumController.AddMusicAlbum(ModelsDto.MusicDto.AlbumDetailsDto)">
             <summary>
             Add music album
             </summary>
@@ -80,7 +80,7 @@
             Remove music album by id
             </summary>
         </member>
-        <member name="M:MusicAPI.Controllers.MusicAlbumController.UpdateMusicAlbum(ModelsDto.MusicAlbumDto)">
+        <member name="M:MusicAPI.Controllers.MusicAlbumController.UpdateMusicAlbum(ModelsDto.MusicDto.AlbumDetailsDto)">
             <summary>
             Update music album
             </summary>
@@ -97,12 +97,12 @@
             </summary>
             <returns>Musician</returns>
         </member>
-        <member name="M:MusicAPI.Controllers.MusicalController.AddMusican(ModelsDto.MusicianDto)">
+        <member name="M:MusicAPI.Controllers.MusicalController.AddMusican(ModelsDto.MusicDto.MusicianDetailsDto)">
             <summary>
             Add musician
             </summary>
         </member>
-        <member name="M:MusicAPI.Controllers.MusicalController.UpdateMusician(ModelsDto.MusicianDto)">
+        <member name="M:MusicAPI.Controllers.MusicalController.UpdateMusician(ModelsDto.MusicDto.MusicianDetailsDto)">
             <summary>
             Update musician
             </summary>
@@ -124,7 +124,7 @@
             </summary>
             <returns>Instrument</returns>
         </member>
-        <member name="M:MusicAPI.Controllers.MusicInstrumentController.AddInstrument(ModelsDto.MusicInstrumentDto)">
+        <member name="M:MusicAPI.Controllers.MusicInstrumentController.AddInstrument(ModelsDto.MusicDto.MusicInstrumentDto)">
             <summary>
             Add instrument
             </summary>
@@ -134,7 +134,7 @@
             Remove instrument
             </summary>
         </member>
-        <member name="M:MusicAPI.Controllers.MusicInstrumentController.UpdateSong(ModelsDto.MusicInstrumentDto)">
+        <member name="M:MusicAPI.Controllers.MusicInstrumentController.UpdateSong(ModelsDto.MusicDto.MusicInstrumentDto)">
             <summary>
             Update instrument
             </summary>
@@ -151,7 +151,7 @@
             </summary>
             <returns>Song</returns>
         </member>
-        <member name="M:MusicAPI.Controllers.SongController.AddSong(ModelsDto.SongDto)">
+        <member name="M:MusicAPI.Controllers.SongController.AddSong(ModelsDto.MusicDto.SongDetailsDto)">
             <summary>
             Add song
             </summary>
@@ -161,7 +161,7 @@
             Remove song
             </summary>
         </member>
-        <member name="M:MusicAPI.Controllers.SongController.UpdateSong(ModelsDto.SongDto)">
+        <member name="M:MusicAPI.Controllers.SongController.UpdateSong(ModelsDto.MusicDto.SongDetailsDto)">
             <summary>
             Update song
             </summary>
@@ -171,9 +171,9 @@
             Get five popular instruments
             </summary>
         </member>
-        <member name="M:MusicAPI.Controllers.StatisticController.GetAverageCost(System.Int32)">
+        <member name="M:MusicAPI.Controllers.StatisticController.GetAverageCost">
             <summary>
-            Get the average cost of a concert per month
+            Get the average cost of a concert today
             </summary>
         </member>
         <member name="M:MusicAPI.Controllers.StatisticController.GetCountryWithMostMusicians">

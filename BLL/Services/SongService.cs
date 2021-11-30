@@ -1,4 +1,5 @@
-﻿using BLL.Interfaces;
+﻿using AutoMapper;
+using BLL.Interfaces;
 using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -11,53 +12,31 @@ namespace BLL.Services
 {
 	public class SongService : BaseGenericService<Song>, ISongService
 	{
-		private IDbHelperService _dbHelper;
+		private IMapper _mapper;
 
-		public SongService(MusicContext context, IDbHelperService dbHelper) : base(context) {
-			_dbHelper = dbHelper;
+		public SongService(MusicContext context, IMapper mapper) : base(context) {
+			_mapper = mapper;
 		}
 
-		public Song GetByIdWithInclude(int id)
+		public async Task<Song> GetByIdWithInclude(int id)
 		{
-			var songs = _context.Songs
-				.AsNoTracking()
-				.Where(m => m.Id == id);
-			if (songs.Count() < 1)
+			var song = await _context.Songs
+				.Include(s => s.GenreSongs)
+				.ThenInclude(g => g.Genre)
+				.FirstOrDefaultAsync(m => m.Id == id);
+			if (song == null)
 			{
-				throw new ArgumentNullException($"song with id - {id} not found");
+				throw new ArgumentNullException($"{typeof(Song).Name} item with id {id} not found.");
 			}
-
-			return songs
-				.Include(g => g.Genres)
-				.FirstOrDefault();
+			return song;
 		}
 
-
-		public async override Task Add(Song entity)
-		{
-			_context.Genres.AttachRange(entity.Genres);
-			await _context.Songs.AddAsync(entity);
-			await _context.SaveChangesAsync();
-		}
 
 		public override async Task Update(Song entity)
 		{
-			Song song = GetByIdWithInclude(entity.Id);
-			song.Name = entity.Name;
-			song.Length = entity.Length;
-			song.Released = entity.Released;
-
-			var genres = _context.Genres.ToList()
-										.Where(g => entity.Genres
-														  .Exists(el => el.Id == g.Id)).ToList();
-
-			_dbHelper.AddItemsToRelationLists(song.Genres, genres);
-			_dbHelper.RemoveItemsFromRelationLists(song.Genres, entity.Genres);
-
-
-			song.MusicAlbumId = entity.MusicAlbumId;
-
-			await _context.SaveChangesAsync();
+			var song = await GetByIdWithInclude(entity.Id);
+			_mapper.Map(entity, song);
+			await base.Update(song);
 		}
 
 	}

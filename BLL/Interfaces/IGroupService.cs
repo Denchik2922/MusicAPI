@@ -5,6 +5,6 @@ namespace BLL.Interfaces
 {
 	public interface IGroupService : IGenericService<Group>
 	{
-		Group GetByIdWithInclude(int id);
+		Task<Group> GetByIdWithInclude(int id);
 	}
 }

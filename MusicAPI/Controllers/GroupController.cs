@@ -1,13 +1,10 @@
 ﻿using AutoMapper;
 using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using ModelsDto;
-using System;
+using ModelsDto.MusicDto;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MusicAPI.Controllers
@@ -46,14 +43,14 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		/// <returns>Group</returns>
 		[HttpGet("{id}")]
-		public IActionResult GetGroupById(int id)
+		public async Task<IActionResult> GetGroupById(int id)
 		{
-			var group = _groupService.GetByIdWithInclude(id);
+			var group = await _groupService.GetByIdWithInclude(id);
 			if (group == null)
 			{
 				return NotFound();
 			}
-			GroupDto groupDto = _mapper.Map<GroupDto>(group);
+			GroupDetailsDto groupDto = _mapper.Map<GroupDetailsDto>(group);
 			return Ok(groupDto);
 		}
 
@@ -62,7 +59,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> AddGroup(GroupDto groupDto)
+		public async Task<IActionResult> AddGroup(GroupDetailsDto groupDto)
 		{
 			Group group = _mapper.Map<Group>(groupDto);
 			await _groupService.Add(group);
@@ -88,7 +85,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPut]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> UpdateGroup(GroupDto groupDto)
+		public async Task<IActionResult> UpdateGroup(GroupDetailsDto groupDto)
 		{
 			Group group = _mapper.Map<Group>(groupDto);
 			await _groupService.Update(group);

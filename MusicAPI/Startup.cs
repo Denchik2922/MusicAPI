@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using MusicAPI.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Hangfire;
+using MusicAPI.Infrastructure.Profiles;
 
 namespace MusicAPI
 {
@@ -94,10 +95,18 @@ namespace MusicAPI
 			services.AddScoped<IAuthService, AuthService>();
 			services.AddSingleton<IConcertApiRepository, ConcertApiRepository>();
 			services.AddTransient<IConcertJob, ConcertJob>();
-			services.AddScoped<IDbHelperService, DbHelperService>();
+
+
 
 			//Add AutoMapper
-			services.AddAutoMapper(typeof(Startup));
+			services.AddAutoMapper(typeof(MusicianProfile),
+								   typeof(GenreProfile),
+								   typeof(InstrumentProfile),
+								   typeof(GroupProfile),
+								   typeof(SongProfile),
+								   typeof(AlbumProfile),
+								   typeof(AuthProfile),
+								   typeof(ConcertProfile));
 
 			services.AddCors();
 		}
@@ -142,7 +151,7 @@ namespace MusicAPI
 			recurringJobManager.AddOrUpdate(
 				"Add new concerts job",
 				() => serviceProvider.GetService<IConcertJob>().AddNewConcerts(),
-				" 0 12 * * *"
+				" 0 6 * * *"
 				);
 
 			recurringJobManager.AddOrUpdate(

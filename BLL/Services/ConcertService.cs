@@ -3,6 +3,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Models;
+using Models.ConcertAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,19 +17,19 @@ namespace BLL.Services
 		public ConcertService(MusicContext context) : base(context){}
 
 
-		public Concert GetByIdWithInclude(int id)
+		public async Task<Concert> GetByIdWithInclude(int id)
 		{
-			var concerts = _context.Concerts
-				.Where(c => c.Id == id);
-			if (concerts.Count() < 1)
-			{
-				throw new ArgumentNullException($"Concert with id - {id} not found");
-			}
 
-			return concerts
+			var concert = await _context.Concerts
 				.Include(c => c.Stats)
 				.Include(c => c.Venue)
-				.FirstOrDefault();
+				.FirstOrDefaultAsync(m => m.Id == id);
+
+			if (concert == null)
+			{
+				throw new ArgumentNullException($"{typeof(Concert).Name} item with id {id} not found.");
+			}
+			return concert;
 		}
 
 		public override async Task Add(Concert entity)
@@ -79,7 +80,7 @@ namespace BLL.Services
 			var concerts = await _context.Concerts
 				.Include(c => c.Stats)
 				.Include(c => c.Venue)
-				.AsNoTracking()
+				.OrderBy(c => c.Datetime_Local)
 				.ToListAsync();
 
 			return concerts;

@@ -3,7 +3,7 @@ using BLL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
-using ModelsDto;
+using ModelsDto.MusicDto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -43,14 +43,14 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		/// <returns>Song</returns>
 		[HttpGet("{id}")]
-		public IActionResult GetSongById(int id)
+		public async Task<IActionResult> GetSongById(int id)
 		{
-			var song = _songService.GetByIdWithInclude(id);
+			var song = await _songService.GetByIdWithInclude(id);
 			if (song == null)
 			{
 				return NotFound();
 			}
-			SongDto songDto = _mapper.Map<SongDto>(song);
+			SongDetailsDto songDto = _mapper.Map<SongDetailsDto>(song);
 			return Ok(songDto);
 		}
 
@@ -60,7 +60,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPost]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> AddSong(SongDto songDto)
+		public async Task<IActionResult> AddSong(SongDetailsDto songDto)
 		{
 			Song song = _mapper.Map<Song>(songDto);
 			await _songService.Add(song);
@@ -83,7 +83,7 @@ namespace MusicAPI.Controllers
 		/// </summary>
 		[HttpPut]
 		[Authorize(Roles = "Admin")]
-		public async Task<IActionResult> UpdateSong(SongDto songDto)
+		public async Task<IActionResult> UpdateSong(SongDetailsDto songDto)
 		{
 			Song song = _mapper.Map<Song>(songDto);
 			await _songService.Update(song);
