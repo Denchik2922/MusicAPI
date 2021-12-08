@@ -39,6 +39,11 @@ namespace MusicAPI
 			services.AddIdentity<IdentityUser, IdentityRole>()
 				.AddEntityFrameworkStores<MusicContext>();
 
+			services.Configure<IdentityOptions>(options =>
+			{
+				options.User.RequireUniqueEmail = true;
+			});
+
 			//Configure jwt authentication
 			var secret = Configuration.GetSection("JwtSettings")["Secret"];
 

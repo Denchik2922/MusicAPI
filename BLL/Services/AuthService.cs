@@ -1,9 +1,7 @@
 ﻿using BLL.Interfaces;
-using DAL;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -42,6 +40,30 @@ namespace BLL.Services
 				}
 			}
 			await _userManager.AddToRoleAsync(user, "User");
+
+		}
+
+		public async Task<bool> ChangePassword(string UserId, string OldPassword, string NewPassword)
+		{
+			var user = await _userManager.FindByIdAsync(UserId);
+			if (user != null)
+			{
+				IdentityResult result =
+					await _userManager.ChangePasswordAsync(user, OldPassword, NewPassword);
+				if (!result.Succeeded)
+				{
+					foreach (var error in result.Errors)
+					{
+						throw new Exception($"Code: {error.Code}, Description: { error.Description}");
+					}
+				}
+				return result.Succeeded;
+			}
+			else
+			{
+				throw new ArgumentNullException($"{typeof(IdentityUser).Name} item with id {UserId} not found.");
+			}
+
 		}
 
 		public async Task<string> Authenticate(string username, string password)
@@ -70,11 +92,12 @@ namespace BLL.Services
 
 			List<Claim> claims = roles.Select(r => new Claim(ClaimTypes.Role, r)).ToList();
 			claims.Add(new Claim(ClaimTypes.Name, user.UserName));
+			claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
 
 			var tokenDescriptor = new SecurityTokenDescriptor
 			{
 				Subject = new ClaimsIdentity(claims),
-				Expires = DateTime.UtcNow.AddMinutes(20),
+				Expires = DateTime.UtcNow.AddMinutes(10),
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
 			};
 			var token = tokenHandler.CreateToken(tokenDescriptor);

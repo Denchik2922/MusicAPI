@@ -32,6 +32,23 @@ namespace MusicAPI.Controllers
             return Ok(new {access_token = user});
         }
 
+
+        [Authorize]
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] UserChangePasswordDto model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return ValidationProblem();
+            }
+            var result = await _authService.ChangePassword(model.UserId, model.OldPassword, model.NewPassword);
+			if (!result)
+			{
+                return StatusCode(500);
+            }
+            return Ok();
+        }
+
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserRegisterDto userModel)

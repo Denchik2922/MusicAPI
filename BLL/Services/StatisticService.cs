@@ -60,6 +60,7 @@ namespace BLL.Services
 		{
 			try
 			{
+
 				var countries = _context.Musicians.
 				Include(m => m.MusicInstrumentMusicians).
 				ThenInclude(i => i.MusicInstrument).

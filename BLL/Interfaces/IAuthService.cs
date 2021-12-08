@@ -10,5 +10,6 @@ namespace BLL.Interfaces
 		Task<string> Authenticate(string username, string password);
 		Task<IEnumerable<IdentityUser>> GetAll();
 		Task Register(IdentityUser user, string password);
+		Task<bool> ChangePassword(string UserId, string OldPassword, string NewPassword);
 	}
 }
